@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class BankAccount(models.Model):
@@ -15,4 +16,5 @@ class BankAccount(models.Model):
     balance = models.DecimalField(max_digits=10,
                                   decimal_places=2,
                                   default=0)
+    owner = models.ForeignKey(User)
 

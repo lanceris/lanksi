@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+Hello
+{% endblock %}
+
+{% block content %}
+    {% for account in accounts %}
+        <ul>
+            <li class="bankaccount">
+                {{ account.label }}
+                <br>
+                {{ account.balance }} {{ account.currency }}
+                <br>
+                Создана {{ account.creation_date }}
+            </li>
+        </ul>
+    {% endfor %}
+{% endblock %}

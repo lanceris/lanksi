@@ -1,10 +1,25 @@
+{% load staticfiles %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
-</head>
-<body>
-    {% block content %}{% endblock %}
-</body>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>{% block title %}lanksi{% endblock %}</title>
+        <link href="{% static "css/base.css" %}" rel="stylesheet">
+    </head>
+    <body>
+        <div id="header">
+            <a href="/" class="logo">lanksi</a>
+            <ul class="menu">
+            {% if request.user.is_authenticated %}
+                <li><a href="{% url "logout" %}">Выйти</a></li>
+            {% else %}
+                <li><a href="{% url "login" %}">Войти</a></li>
+            {% endif %}
+            </ul>
+        </div>
+        <div id="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
 </html>
