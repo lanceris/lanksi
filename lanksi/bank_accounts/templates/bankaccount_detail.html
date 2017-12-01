@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Account: {{ account.label }}</h2>
+
+<strong>Balance: {{ account.balance }}</strong>
+
+<p>{{ account.description }}<p>
+
+<ul>
+	<li><a href="{% url "add_money" account.slug %}" class="plus">Add money</a></li>
+	<li><a href="{% url "withdraw_money" account.slug %}" class="minus">Withdraw money</a></li>
+	<li><a href="{% url "move_money" account.slug %}" class="move">Move money to another account</a></li>
+	<li><a href="{% url "history" account.slug %}" class="history">Operations history</a></li>
+</ul>
+
+{% endblock %}

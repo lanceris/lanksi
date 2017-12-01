@@ -5,10 +5,12 @@ Hello
 {% endblock %}
 
 {% block content %}
+    <a href="{% url "add_account" %}">New account</a>
+    <p>Hello, {{ request.user }}</p>
     {% for account in accounts %}
         <ul>
             <li class="bankaccount">
-                {{ account.label }}
+                <a href="{% url "account_details" account.slug %}">{{ account.label }}</a>
                 <br>
                 {{ account.balance }} {{ account.currency }}
                 <br>

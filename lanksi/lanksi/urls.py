@@ -21,5 +21,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/login/$', auth_views.login, name='login'),
     url(r'^account/logout/$', auth_views.logout, name='logout'),
-    url(r'^', include('bank_accounts.urls', namespace='bank_account')),
+    url(r'^', include('bank_accounts.urls')),
 ]
