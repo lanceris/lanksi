@@ -1,11 +1,6 @@
 from django import forms
 from .models import BankAccount, Transaction, TR_TAG_CHOICES
-
-
-def add_empty_label(choices, empty_label=u''):
-    a = list(choices)
-    a.insert(0, ('', empty_label))
-    return tuple(a)
+from datetime import datetime
 
 
 class BankAccountForm(forms.ModelForm):
@@ -13,36 +8,31 @@ class BankAccountForm(forms.ModelForm):
         model = BankAccount
         exclude = ('owner',)
 
-    balance = forms.CharField(max_length=42, help_text="Example: USD 100")
+    balance = forms.CharField(max_length=15)
 
-    def clean_number(self):
-        value = self.cleaned_data['number']
-        try:
-            BankAccount.objects.get(number=value)
-            raise forms.ValidationError("This account number alredy exist.")
-        except BankAccount.DoesNotExist:
-            return value
+
+class BankAccountEditForm(forms.ModelForm):
+    class Meta:
+        model = BankAccount
+        exclude = ('owner', 'balance', 'currency')
 
 
 class TransactionForm(forms.Form):
     amount = forms.DecimalField(max_digits=12, decimal_places=2, min_value=0)
-    tag = forms.IntegerField(widget=forms.Select(choices=add_empty_label(TR_TAG_CHOICES)), required=False)
-    description = forms.CharField(widget=forms.Textarea())
+    tag = forms.IntegerField(widget=forms.Select(choices=TR_TAG_CHOICES), required=False)
+    description = forms.CharField(widget=forms.Textarea(), required=False)
 
 
 class MoveMoneyForm(forms.Form):
-    def __init__(self, data=None, from_account=None, *arg, **kwarg):
-        self.base_fields['account'].queryset = BankAccount.objects \
-            .exclude(number__exact=from_account.number)
-        super(MoveMoneyForm, self).__init__(data, *arg, **kwarg)
 
-    account = forms.ModelChoiceField(None)
+    account = forms.ModelChoiceField(queryset=BankAccount.objects.all())
     amount = forms.DecimalField(max_digits=12, decimal_places=2, min_value=0)
-    tag = forms.IntegerField(widget=forms.Select(choices=add_empty_label(TR_TAG_CHOICES)), required=False)
-    description = forms.CharField(widget=forms.Textarea())
+    tag = forms.IntegerField(widget=forms.Select(choices=TR_TAG_CHOICES), required=False)
+    description = forms.CharField(widget=forms.Textarea(), required=False)
 
 
 class FilterHistoryForm(forms.Form):
-    date_from = forms.DateField(required=False)
-    date_to = forms.DateField(required=False)
+    years = [year for year in range(1985, datetime.today().year + 1)][::-1]
+    date_from = forms.DateField(widget=forms.SelectDateWidget(years=years), required=False)
+    date_to = forms.DateField(widget=forms.SelectDateWidget(years=years), required=False)
     keywords = forms.CharField(required=False)

@@ -4,20 +4,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from .models import BankAccount, Transaction, TR_ADD, TR_MOVE, TR_WITHDRAW
 from .forms import TransactionForm, MoveMoneyForm,\
-                    FilterHistoryForm, BankAccountForm
-
-
-def _transaction_request(request, template, account, process_method):
-    if request.method == 'POST':
-        form = TransactionForm(request.POST)
-        if form.is_valid():
-            process_method(amount=form.cleaned_data['amount'],
-                           tag=form.cleaned_data['tag'],
-                           description=form.cleaned_data['description'])
-            return redirect(reverse("list_accounts"))
-    else:
-        form = TransactionForm()
-    return render(request, template, {'form': form})
+                    FilterHistoryForm, BankAccountForm, \
+                    BankAccountEditForm
 
 
 @login_required
@@ -47,31 +35,93 @@ def account_details(request, slug):
 
 
 @login_required
+def edit_account(request, slug):
+    account = BankAccount.objects.get(slug=slug, owner=request.user)
+    if request.method == 'POST':
+        form = BankAccountEditForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            BankAccount.objects.create(label=cd['label'],
+                                       currency=account.currency,
+                                       balance=account.balance,
+                                       owner=request.user,
+                                       description=cd['description'])
+            account.delete()
+
+            return redirect(reverse("list_accounts"))
+    else:
+        form = BankAccountEditForm(initial={'label': account.label,
+                                            'description': account.description})
+    return render(request, "bankaccount_edit.html", {'account': account,
+                                                     'form': form})
+
+
+@login_required
+def delete_account(request, slug):
+    account = BankAccount.objects.get(slug=slug, owner=request.user)
+    return render(request, 'bankaccount_delete.html', {'account': account})
+
+
+@login_required
+def confirm_delete(request, slug):
+    account = BankAccount.objects.get(slug=slug, owner=request.user)
+    account.delete()
+    return redirect(reverse("list_accounts"))
+
+
+@login_required
 def add_money(request, slug):
     account = get_object_or_404(BankAccount, slug=slug, owner=request.user)
-    return _transaction_request(request, "add_money.html", account, account.add_money)
+    if request.method == 'POST':
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            account.add_money(amount=cd['amount'],
+                              tag=cd['tag'],
+                              description=cd['description'])
+            return redirect(reverse("account_details", args=[account.slug]))
+    else:
+        form = TransactionForm()
+    return render(request, "money_transfer.html", {'account': account,
+                                                   'form': form,
+                                                   'msg': 'Add money'})
 
 
 @login_required
 def withdraw_money(request, slug):
     account = get_object_or_404(BankAccount, slug=slug, owner=request.user)
-    return _transaction_request(request, "withdraw_money.html", account, account.withdraw_money)
+    if request.method == 'POST':
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            account.withdraw_money(amount=cd['amount'],
+                                   tr_tag=cd['tag'],
+                                   description=cd['description'])
+            return redirect(reverse("account_details", args=[account.slug]))
+    else:
+        form = TransactionForm()
+    return render(request, "money_transfer.html", {'account': account,
+                                                   'form': form,
+                                                   'msg': 'Withdraw money'})
 
 
 @login_required
 def move_money(request, slug):
     account = get_object_or_404(BankAccount, slug=slug, owner=request.user)
     if request.method == 'POST':
-        form = MoveMoneyForm(request.POST, from_account=account)
+        form = MoveMoneyForm(request.POST)
         if form.is_valid():
-            account.move_money(to_account=form.cleaned_data['account'],
-                               amount=form.cleaned_data['amount'],
-                               tag=form.cleaned_data['tag'],
-                               description=form.cleaned_data['description'])
-            return redirect(reverse("account-details"), args=[account.number])
+            cd = form.cleaned_data
+            account.move_money(to_account=cd['account'],
+                               amount=cd['amount'],
+                               tag=cd['tag'],
+                               description=cd['description'])
+            return redirect(reverse("account_details", args=[account.slug]))
     else:
-        form = MoveMoneyForm(from_account=account)
-    return _transaction_request(request, "move_money.html", account, account.withdraw_money)
+        form = MoveMoneyForm()
+    return render(request, "money_transfer.html", {'account': account,
+                                                   'form': form,
+                                                   'msg': 'Move money'})
 
 
 @login_required

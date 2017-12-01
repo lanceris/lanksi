@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit your account
+{% endblock %}
+
+{% block content %}
+    <a href="{% url "account_details" account.slug %}">Назад</a>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
+{% endblock %}

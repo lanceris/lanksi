@@ -3,12 +3,15 @@
 {% block content %}
 
 <h2>Account: {{ account.label }}</h2>
-
+<a href="{% url "list_accounts" %}">К списку счетов</a>
+<br><br>
 <strong>Balance: {{ account.balance }}</strong>
 
 <p>{{ account.description }}<p>
 
 <ul>
+    <li><a href="{% url "edit_account" account.slug %}">Edit account</a></li>
+    <li><a href="{% url "delete_account" account.slug %}">Delete account</a></li>
 	<li><a href="{% url "add_money" account.slug %}" class="plus">Add money</a></li>
 	<li><a href="{% url "withdraw_money" account.slug %}" class="minus">Withdraw money</a></li>
 	<li><a href="{% url "move_money" account.slug %}" class="move">Move money to another account</a></li>
