@@ -1,11 +1,30 @@
-from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404
-from django.core.urlresolvers import reverse
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.core.urlresolvers import reverse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import TemplateView
+
 from .models import BankAccount, Transaction, TR_ADD, TR_MOVE, TR_WITHDRAW
 from .forms import TransactionForm, MoveMoneyForm,\
                     FilterHistoryForm, BankAccountForm, \
                     BankAccountEditForm
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            cd = form.cleaned_data
+            username = cd['username']
+            raw_password = ['password1']
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
 
 
 @login_required
@@ -156,15 +175,15 @@ def history(request, slug):
             item['balance'] = t.balance
             item['balance_before'] = t.balance + t.tr_amount
         elif t.tr_type == TR_MOVE:
-            if t.account == account:
+            if t.tr_from == account:
                 item['debit'] = t.tr_amount
                 item['balance'] = t.balance
-                item['correspondent'] = t.recipient_account
+                item['correspondent'] = t.tr_to
                 item['balance_before'] = t.balance + t.tr_amount
             else:
                 item['credit'] = t.tr_amount
                 item['balance'] = t.recipient_balance
-                item['correspondent'] = t.account
+                item['correspondent'] = t.tr_from
                 item['balance_before'] = t.recipient_balance - t.tr_amount
         history_items.append(item)
 

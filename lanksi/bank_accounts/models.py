@@ -13,7 +13,7 @@ TR_TYPES = (
     (TR_MOVE, 'move'),
 )
 CURRENCIES = (
-        ('RUR', 'Russian Rouble'),
+        ('RUB', 'Russian Rouble'),
         ('USD', 'US Dollar'),
         ('EUR', 'Euro')
     )
