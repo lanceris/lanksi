@@ -6,11 +6,13 @@ from autoslug import AutoSlugField
 TR_ADD = 1
 TR_WITHDRAW = 2
 TR_MOVE = 3
+TR_EXCHANGE = 4
 
 TR_TYPES = (
     (TR_ADD, 'add'),
     (TR_WITHDRAW, 'withdraw'),
     (TR_MOVE, 'move'),
+    (TR_EXCHANGE, 'exchange'),
 )
 CURRENCIES = (
         ('RUB', 'Russian Rouble'),
@@ -33,7 +35,7 @@ class BankAccount(models.Model):
     creation_date = models.DateField(auto_now_add=True, editable=False)
     currency = models.CharField(max_length=3,
                                 choices=CURRENCIES,
-                                default='RUR')
+                                default='RUB')
 
     balance = models.DecimalField(max_digits=12,
                                   decimal_places=2,
@@ -42,7 +44,7 @@ class BankAccount(models.Model):
     description = models.TextField(blank=True)
 
     def __str__(self):
-        return self.owner.username + " " + self.label + " " + str(self.balance) + " " + self.currency
+        return self.label
 
     @atomic
     def add_money(self, amount, tag, description):
@@ -104,4 +106,25 @@ class Transaction(models.Model):
     recipient_balance = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     currency = models.CharField(max_length=3,
                                 choices=CURRENCIES,
-                                default='RUR')
+                                default='RUB')
+
+
+class TransactionTemplate(models.Model):
+    pass
+
+
+class Goal(models.Model):
+    goal_type = models.CharField(max_length=10,
+                                 choices=TR_TYPES)
+    name = models.CharField(max_length=255)
+    money = models.DecimalField(max_digits=26,
+                                decimal_places=2)
+    currency = models.CharField(max_length=3,
+                                choices=CURRENCIES,
+                                default='RUB')
+    created = models.DateTimeField(editable=False)
+    updated = models.DateTimeField()
+
+
+
+

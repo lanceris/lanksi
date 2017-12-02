@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block title %}
 Hello
@@ -18,4 +19,58 @@ Hello
             </li>
         </ul>
     {% endfor %}
+
+    <h2>History</h2>
+
+    Filter:
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Apply">
+    </form>
+
+    <table class="table">
+        <tr>
+            <th> </th>
+            <th>Date</th>
+            <th>Credit</th>
+            <th>Debit</th>
+            <th>Balance</th>
+            <th>Correspondent</th>
+            <th>Tag</th>
+            <th>Description</th>
+        </tr>
+    {% for item in history %}\
+        <tr>
+            <td>
+                {% if item.credit %}
+                    <img src="{% static 'bank_accounts/img/plus.png' %}" width="32px" height="32px" class="history-type">
+                {% else %}
+                    <img src="{% static 'bank_accounts/img/minus.png' %}" width="32px" height="32px" class="history-type">
+                {% endif%}
+            </td>
+            <td>
+                {{item.datetime}}
+            </td>
+            <td>
+                {{item.credit}}
+            </td>
+            <td>
+                {{item.debit}}
+            </td>
+            <td>
+                {{item.balance}}({{item.balance_before}})
+            </td>
+            <td>
+                {{item.correspondent}}
+            </td>
+            <td>
+                {{item.tag}}
+            </td>
+            <td>
+                {{item.description}}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
 {% endblock %}

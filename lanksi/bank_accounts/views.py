@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import TemplateView
 
 from .models import BankAccount, Transaction, TR_ADD, TR_MOVE, TR_WITHDRAW
 from .forms import TransactionForm, MoveMoneyForm,\
@@ -27,10 +26,62 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 
+def get_history(accounts, queryset):
+    history_items = []
+    for t in queryset:
+        item = {'description': t.comment, 'datetime': t.created, 'tag': t.tr_tag,
+                'debit': '', 'credit': '', 'correspondent': ''}
+        if t.tr_type == TR_ADD:
+            item['credit'] = t.tr_amount
+            item['balance'] = t.balance
+            item['balance_before'] = t.balance - t.tr_amount
+        elif t.tr_type == TR_WITHDRAW:
+            item['debit'] = t.tr_amount
+            item['balance'] = t.balance
+            item['balance_before'] = t.balance + t.tr_amount
+        elif t.tr_type == TR_MOVE:
+            if t.tr_from in accounts:
+                item['debit'] = t.tr_amount
+                item['balance'] = t.balance
+                item['correspondent'] = t.tr_to
+                item['balance_before'] = t.balance + t.tr_amount
+            else:
+                item['credit'] = t.tr_amount
+                item['balance'] = t.recipient_balance
+                item['correspondent'] = t.tr_from
+                item['balance_before'] = t.recipient_balance - t.tr_amount
+        history_items.append(item)
+
+    return history_items
+
+
 @login_required
 def list_accounts(request):
     accounts = BankAccount.objects.filter(owner=request.user)
-    return render(request, 'bankaccount_list.html', {'accounts': accounts})
+    from django.db.models import Q
+    queryset = Transaction.objects.filter(
+        Q(tr_from__in=accounts) | Q(tr_to__in=accounts)).order_by('-created')
+
+    if request.method == 'POST':
+        form = FilterHistoryForm(request.POST, request=request)
+        if form.is_valid():
+            if form.cleaned_data['date_from']:
+                queryset = queryset.filter(created__gte=form.cleaned_data['date_from'])
+            if form.cleaned_data['date_to']:
+                queryset = queryset.filter(created__lte=form.cleaned_data['date_to'])
+            if form.cleaned_data['keywords']:
+                queryset = queryset.filter(comment__contains=form.cleaned_data['keywords'])
+            if form.cleaned_data['account']:
+                queryset = queryset.filter(Q(tr_from=form.cleaned_data['account']) |
+                                           Q(tr_to=form.cleaned_data['account']))
+    else:
+        form = FilterHistoryForm(request=request)
+
+    history_items = get_history(accounts=accounts,
+                                queryset=queryset)
+    return render(request, 'bankaccount_list.html', {'accounts': accounts,
+                                                     'form': form,
+                                                     'history': history_items})
 
 
 @login_required
@@ -144,47 +195,7 @@ def move_money(request, slug):
 
 
 @login_required
-def history(request, slug):
+def exchange_money(request, slug):
     account = get_object_or_404(BankAccount, slug=slug, owner=request.user)
-    from django.db.models import Q
-    queryset = Transaction.objects.filter(
-        Q(tr_from=account) | Q(tr_to=account)).order_by('-created')
 
-    if request.method == 'POST':
-        form = FilterHistoryForm(request.POST)
-        if form.is_valid():
-            if form.cleaned_data['date_from']:
-                queryset = queryset.filter(created__gte=form.cleaned_data['date_from'])
-            if form.cleaned_data['date_to']:
-                queryset = queryset.filter(created__lte=form.cleaned_data['date_to'])
-            if form.cleaned_data['keywords']:
-                queryset = queryset.filter(comment__contains=form.cleaned_data['keywords'])
-    else:
-        form = FilterHistoryForm()
 
-    history_items = []
-    for t in queryset:
-        item = {'description': t.comment, 'datetime': t.created, 'tag': t.tr_tag,
-                'debit': '', 'credit': '', 'correspondent': ''}
-        if t.tr_type == TR_ADD:
-            item['credit'] = t.tr_amount
-            item['balance'] = t.balance
-            item['balance_before'] = t.balance - t.tr_amount
-        elif t.tr_type == TR_WITHDRAW:
-            item['debit'] = t.tr_amount
-            item['balance'] = t.balance
-            item['balance_before'] = t.balance + t.tr_amount
-        elif t.tr_type == TR_MOVE:
-            if t.tr_from == account:
-                item['debit'] = t.tr_amount
-                item['balance'] = t.balance
-                item['correspondent'] = t.tr_to
-                item['balance_before'] = t.balance + t.tr_amount
-            else:
-                item['credit'] = t.tr_amount
-                item['balance'] = t.recipient_balance
-                item['correspondent'] = t.tr_from
-                item['balance_before'] = t.recipient_balance - t.tr_amount
-        history_items.append(item)
-
-    return render(request, "bankaccount_history.html", {'history': history_items, 'form': form})

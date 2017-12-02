@@ -32,7 +32,13 @@ class MoveMoneyForm(forms.Form):
 
 
 class FilterHistoryForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super(FilterHistoryForm, self).__init__(*args, **kwargs)
+        self.fields['account'].queryset = BankAccount.objects.filter(owner=self.request.user)
+
     years = [year for year in range(1985, datetime.today().year + 1)][::-1]
     date_from = forms.DateField(widget=forms.SelectDateWidget(years=years), required=False)
     date_to = forms.DateField(widget=forms.SelectDateWidget(years=years), required=False)
     keywords = forms.CharField(required=False)
+    account = forms.ModelChoiceField(queryset=None, required=False)
