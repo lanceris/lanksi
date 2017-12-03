@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.transaction import atomic
 from autoslug import AutoSlugField
+from taggit.managers import TaggableManager
+from lanksi.categories.models import Category
 
 TR_ADD = 1
 TR_WITHDRAW = 2
@@ -19,14 +21,6 @@ CURRENCIES = (
         ('USD', 'US Dollar'),
         ('EUR', 'Euro')
     )
-TR_TAG_CHOICES = (
-    (0, ''),
-    (1, 'Equity'),
-    (2, 'Asset'),
-    (3, 'Liability'),
-    (4, 'Income'),
-    (5, 'Expense'),
-)
 
 
 class BankAccount(models.Model):
@@ -101,30 +95,11 @@ class Transaction(models.Model):
                                     decimal_places=2,
                                     default=0)
     tr_type = models.SmallIntegerField(choices=TR_TYPES)
-    tr_tag = models.SmallIntegerField(choices=TR_TAG_CHOICES)
+    tr_tag = TaggableManager()
+    category = models.ForeignKey(Category, blank=True, null=True)
     balance = models.DecimalField(max_digits=12, decimal_places=2)
     recipient_balance = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     currency = models.CharField(max_length=3,
                                 choices=CURRENCIES,
                                 default='RUB')
-
-
-class TransactionTemplate(models.Model):
-    pass
-
-
-class Goal(models.Model):
-    goal_type = models.CharField(max_length=10,
-                                 choices=TR_TYPES)
-    name = models.CharField(max_length=255)
-    money = models.DecimalField(max_digits=26,
-                                decimal_places=2)
-    currency = models.CharField(max_length=3,
-                                choices=CURRENCIES,
-                                default='RUB')
-    created = models.DateTimeField(editable=False)
-    updated = models.DateTimeField()
-
-
-
 

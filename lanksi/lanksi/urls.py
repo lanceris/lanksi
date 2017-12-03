@@ -20,11 +20,16 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+from accounts import views as bank_views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^register/$', bank_views.register, name='register'),
     url(r'^accounts/login/$', auth_views.login, name='login'),
     url(r'^account/logout/$', auth_views.logout, name='logout'),
-    url(r'^', include('bank_accounts.urls')),
+    url(r'^', include('accounts.urls', namespace='accounts')),
+    url(r'^categories/', include('categories.urls', namespace='categories')),
+    url(r'^goals/', include('goals.urls', namespace='goals')),
+    url(r'^patterns/', include('patterns.urls', namespace='patterns')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

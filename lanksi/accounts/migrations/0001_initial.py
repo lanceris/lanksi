@@ -42,8 +42,8 @@ class Migration(migrations.Migration):
                 ('balance', models.DecimalField(decimal_places=2, max_digits=12)),
                 ('recipient_balance', models.DecimalField(blank=True, decimal_places=2, max_digits=12, null=True)),
                 ('currency', models.CharField(choices=[('RUR', 'Russian Rouble'), ('USD', 'US Dollar'), ('EUR', 'Euro')], default='RUR', max_length=3)),
-                ('tr_from', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='bank_accounts.BankAccount')),
-                ('tr_to', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tr_to', to='bank_accounts.BankAccount')),
+                ('tr_from', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.BankAccount')),
+                ('tr_to', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tr_to', to='accounts.BankAccount')),
             ],
         ),
     ]

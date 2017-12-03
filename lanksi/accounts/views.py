@@ -1,14 +1,12 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.core.urlresolvers import reverse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, reverse
 
-from .models import BankAccount, Transaction, TR_ADD, TR_MOVE, TR_WITHDRAW
+from .models import BankAccount, Transaction, TR_ADD, TR_MOVE, TR_WITHDRAW, TR_EXCHANGE
 from .forms import TransactionForm, MoveMoneyForm,\
                     FilterHistoryForm, BankAccountForm, \
                     BankAccountEditForm
-
 
 def register(request):
     if request.method == 'POST':
@@ -26,37 +24,44 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 
+#region accounts
 def get_history(accounts, queryset):
     history_items = []
     for t in queryset:
-        item = {'description': t.comment, 'datetime': t.created, 'tag': t.tr_tag,
-                'debit': '', 'credit': '', 'correspondent': ''}
+        item = {'type': None, 'description': t.comment, 'datetime': t.created, 'tag': t.tr_tag,
+                'debit': '', 'credit': '', 'from': '', 'to': ''}
         if t.tr_type == TR_ADD:
+            item['type'] = 1
             item['credit'] = t.tr_amount
             item['balance'] = t.balance
             item['balance_before'] = t.balance - t.tr_amount
         elif t.tr_type == TR_WITHDRAW:
+            item['type'] = 2
             item['debit'] = t.tr_amount
             item['balance'] = t.balance
             item['balance_before'] = t.balance + t.tr_amount
         elif t.tr_type == TR_MOVE:
+            item['type'] = 3
             if t.tr_from in accounts:
                 item['debit'] = t.tr_amount
                 item['balance'] = t.balance
-                item['correspondent'] = t.tr_to
+                item['to'] = t.tr_from
+                item['from'] = t.tr_to
                 item['balance_before'] = t.balance + t.tr_amount
             else:
                 item['credit'] = t.tr_amount
                 item['balance'] = t.recipient_balance
-                item['correspondent'] = t.tr_from
+                item['from'] = t.tr_from
                 item['balance_before'] = t.recipient_balance - t.tr_amount
+        elif t.tr_type == TR_EXCHANGE:
+            pass
         history_items.append(item)
 
     return history_items
 
 
 @login_required
-def list_accounts(request):
+def list_(request):
     accounts = BankAccount.objects.filter(owner=request.user)
     from django.db.models import Q
     queryset = Transaction.objects.filter(
@@ -65,6 +70,8 @@ def list_accounts(request):
     if request.method == 'POST':
         form = FilterHistoryForm(request.POST, request=request)
         if form.is_valid():
+            if form.cleaned_data['time_period']:
+                queryset = queryset.filter(created__gte=form.cleaned_data['time_period'])
             if form.cleaned_data['date_from']:
                 queryset = queryset.filter(created__gte=form.cleaned_data['date_from'])
             if form.cleaned_data['date_to']:
@@ -79,33 +86,33 @@ def list_accounts(request):
 
     history_items = get_history(accounts=accounts,
                                 queryset=queryset)
-    return render(request, 'bankaccount_list.html', {'accounts': accounts,
-                                                     'form': form,
-                                                     'history': history_items})
+    return render(request, 'list_.html', {'accounts': accounts,
+                                          'form': form,
+                                          'history': history_items})
 
 
 @login_required
-def add_account(request):
+def add(request):
     if request.method == 'POST':
         form = BankAccountForm(request.POST)
         if form.is_valid():
             new_acc = form.save(commit=False)
             new_acc.owner = request.user
             new_acc.save()
-            return redirect(reverse("list_accounts"))
+            return redirect(reverse("accounts:list_"))
     else:
         form = BankAccountForm()
-    return render(request, 'bankaccount_add.html', {'form': form})
+    return render(request, 'add.html', {'form': form})
 
 
 @login_required
-def account_details(request, slug):
+def details(request, slug):
     account = get_object_or_404(BankAccount, slug=slug, owner=request.user)
-    return render(request, "bankaccount_detail.html", {'account': account})
+    return render(request, "details.html", {'account': account})
 
 
 @login_required
-def edit_account(request, slug):
+def edit(request, slug):
     account = BankAccount.objects.get(slug=slug, owner=request.user)
     if request.method == 'POST':
         form = BankAccountEditForm(request.POST)
@@ -118,27 +125,29 @@ def edit_account(request, slug):
                                        description=cd['description'])
             account.delete()
 
-            return redirect(reverse("list_accounts"))
+            return redirect(reverse("accounts:list_"))
     else:
         form = BankAccountEditForm(initial={'label': account.label,
                                             'description': account.description})
-    return render(request, "bankaccount_edit.html", {'account': account,
+    return render(request, "edit.html", {'account': account,
                                                      'form': form})
 
 
 @login_required
-def delete_account(request, slug):
+def delete(request, slug):
     account = BankAccount.objects.get(slug=slug, owner=request.user)
-    return render(request, 'bankaccount_delete.html', {'account': account})
+    return render(request, 'delete.html', {'account': account})
 
 
 @login_required
 def confirm_delete(request, slug):
     account = BankAccount.objects.get(slug=slug, owner=request.user)
     account.delete()
-    return redirect(reverse("list_accounts"))
+    return redirect(reverse("accounts:list"))
+#endregion accounts
 
 
+#region operations
 @login_required
 def add_money(request, slug):
     account = get_object_or_404(BankAccount, slug=slug, owner=request.user)
@@ -165,7 +174,7 @@ def withdraw_money(request, slug):
         if form.is_valid():
             cd = form.cleaned_data
             account.withdraw_money(amount=cd['amount'],
-                                   tr_tag=cd['tag'],
+                                   tag=cd['tag'],
                                    description=cd['description'])
             return redirect(reverse("account_details", args=[account.slug]))
     else:
@@ -198,4 +207,4 @@ def move_money(request, slug):
 def exchange_money(request, slug):
     account = get_object_or_404(BankAccount, slug=slug, owner=request.user)
 
-
+#endregion operations

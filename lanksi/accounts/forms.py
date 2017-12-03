@@ -1,6 +1,7 @@
 from django import forms
-from .models import BankAccount, Transaction, TR_TAG_CHOICES
-from datetime import datetime
+from .models import BankAccount, TR_TAG_CHOICES
+from django.utils.timezone import datetime
+from dateutil.relativedelta import relativedelta
 
 
 class BankAccountForm(forms.ModelForm):
@@ -38,6 +39,20 @@ class FilterHistoryForm(forms.Form):
         self.fields['account'].queryset = BankAccount.objects.filter(owner=self.request.user)
 
     years = [year for year in range(1985, datetime.today().year + 1)][::-1]
+    day = datetime.today() - relativedelta(days=1)
+    week = datetime.today() - relativedelta(weeks=1)
+    month = datetime.today() - relativedelta(months=1)
+    year = datetime.today() - relativedelta(years=1)
+    time_periods = (
+        (None, ' '),
+        (day, 'day'),
+        (week, 'week'),
+        (month, 'month'),
+        (year, 'year'),
+    )
+    time_period = forms.ChoiceField(choices=time_periods,
+                                    initial=time_periods[0],
+                                    required=False)
     date_from = forms.DateField(widget=forms.SelectDateWidget(years=years), required=False)
     date_to = forms.DateField(widget=forms.SelectDateWidget(years=years), required=False)
     keywords = forms.CharField(required=False)
