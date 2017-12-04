@@ -7,8 +7,6 @@ from taggit.managers import TaggableManager
 from categories.models import Category
 
 
-
-
 class BankAccount(models.Model):
     label = models.CharField(max_length=255)
     slug = AutoSlugField(populate_from='label', unique=True)
@@ -27,23 +25,23 @@ class BankAccount(models.Model):
         return self.label
 
     @atomic
-    def add_money(self, amount, tag, category, description):
+    def add_money(self, amount, tags, category, description):
         self.balance += amount
-        transaction = self._create_transaction(settings.TR_ADD, amount, tag, category, description)
+        transaction = self._create_transaction(settings.TR_ADD, amount, tags, category, description)
         self.save()
         transaction.save()
 
     @atomic
-    def withdraw_money(self, amount, tag, category, description):
+    def withdraw_money(self, amount, tags, category, description):
         if (self.balance - amount) < 0:
             raise Exception("Withdraw amount couldn't be more than account balance")
         self.balance -= amount
-        transaction = self._create_transaction(settings.TR_WITHDRAW, amount,  tag, category, description)
+        transaction = self._create_transaction(settings.TR_WITHDRAW, amount,  tags, category, description)
         self.save()
         transaction.save()
 
     @atomic
-    def move_money(self, to_account, amount, category, tag, description):
+    def move_money(self, to_account, amount, category, tags, description):
         if (self.balance - amount) < 0:
             raise Exception("Withdraw amount couldn't be more than account balance")
         if self.currency != to_account.currency:
@@ -52,12 +50,12 @@ class BankAccount(models.Model):
             raise Exception("Sender and recipient accounts are the same")
         self.balance -= amount
         to_account.balance += amount
-        transaction = self._create_transaction(settings.TR_MOVE, amount, tag, category, description, to_account)
+        transaction = self._create_transaction(settings.TR_MOVE, amount, tags, category, description, to_account)
         self.save()
         to_account.save()
         transaction.save()
 
-    def _create_transaction(self, tr_type, amount, tag, category, description, recipient=None):
+    def _create_transaction(self, tr_type, amount, tags, category, description, recipient=None):
         if amount < 0:
             raise Exception("Invalid amount")
         recipient_balance = None
@@ -66,7 +64,7 @@ class BankAccount(models.Model):
         return Transaction(tr_from=self, tr_type=tr_type,
                            tr_to=recipient,
                            tr_amount=amount,
-                           tr_tag=tag,
+                           tr_tags=tags,
                            category=category,
                            balance=self.balance,
                            recipient_balance=recipient_balance,
@@ -82,7 +80,7 @@ class Transaction(models.Model):
                                     decimal_places=2,
                                     default=0)
     tr_type = models.SmallIntegerField(choices=settings.TR_TYPES)
-    tr_tag = TaggableManager()
+    tr_tags = TaggableManager()
     category = models.ForeignKey(Category, blank=True, null=True)
     balance = models.DecimalField(max_digits=12, decimal_places=2)
     recipient_balance = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)

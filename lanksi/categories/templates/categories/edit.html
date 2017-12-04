@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 
 {% block title %}
-Edit your account
+Edit category
 {% endblock %}
 
 {% block content %}
+
+    <h2>Edit Category</h2>
+
     <a href="{% url "categories:details" category.slug %}">Назад</a>
     <form method="post">
         {% csrf_token %}

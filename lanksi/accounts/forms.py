@@ -1,5 +1,5 @@
 from django import forms
-from accounts.models import BankAccount
+from accounts.models import BankAccount, Transaction
 from categories.models import Category
 from django.utils.timezone import datetime
 from dateutil.relativedelta import relativedelta
@@ -22,7 +22,8 @@ class EditBankAccountForm(forms.ModelForm):
         exclude = ('owner', 'balance', 'currency')
 
 
-class TransactionForm(forms.Form):
+class TransactionForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
         self.cat_type = kwargs.pop('cat_type')
@@ -30,13 +31,16 @@ class TransactionForm(forms.Form):
         self.fields['category'].queryset = Category.objects.filter(owner=self.request.user)\
                                                            .filter(cat_type=self.cat_type)
 
+    class Meta:
+        model = Transaction
+        fields = ('amount', 'category', 'tr_tags', 'description')
+
     amount = forms.DecimalField(max_digits=12, decimal_places=2, min_value=0)
-    tag = forms.IntegerField(widget=forms.Select(), required=False)
     category = forms.ModelChoiceField(queryset=None, required=False)
-    description = forms.CharField(widget=forms.Textarea(), required=False)
+    description = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 50}), required=False)
 
 
-class MoveMoneyForm(forms.Form):
+class MoveMoneyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
         self.acc = kwargs.pop('account')
@@ -47,9 +51,12 @@ class MoveMoneyForm(forms.Form):
         self.fields['category'].queryset = Category.objects.filter(owner=self.request.user) \
                                                            .filter(cat_type=self.cat_type)
 
+    class Meta:
+        model = Transaction
+        fields = ('account', 'amount', 'category', 'tr_tags', 'description')
+
     account = forms.ModelChoiceField(queryset=None)
     amount = forms.DecimalField(max_digits=12, decimal_places=2, min_value=0)
-    tag = forms.IntegerField(widget=forms.Select(), required=False)
     category = forms.ModelChoiceField(queryset=None, required=False)
     description = forms.CharField(widget=forms.Textarea(), required=False)
 

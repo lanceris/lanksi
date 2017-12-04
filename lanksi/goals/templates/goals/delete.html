@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block title %}
-Delete {{ account.label }}?
+Delete {{ goal.name }}?
 {% endblock %}
 
 {% block content %}
-    <h1>Delete {{ account.label }}?</h1>
-    <a href="{% url "accounts:confirm_delete" account.slug %}">Yes</a>
-    <a href="{% url "accounts:details" account.slug %}">No, go back</a>
+    <h1>Delete {{ goal.name }}?</h1>
+    <a href="{% url "goals:confirm_delete" goal.id %}">Yes</a>
+    <a href="{% url "goals:details" goal.id %}">No, go back</a>
 {% endblock %}

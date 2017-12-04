@@ -31,7 +31,8 @@ def register(request):
 def get_history(accounts, queryset):
     history_items = []
     for t in queryset:
-        item = {'type': None, 'description': t.comment, 'datetime': t.created, 'tag': 'TODO',
+        #FIXME: tags not shows up properly
+        item = {'type': None, 'description': t.comment, 'datetime': t.created, 'tags': t.tr_tags,
                 'debit': '', 'credit': '', 'from': '', 'to': ''}
         if t.tr_type == settings.TR_ADD:
             item['type'] = 1
@@ -94,8 +95,8 @@ def list_(request):
     history_items = get_history(accounts=accounts,
                                 queryset=queryset)
     return render(request, 'accounts/list_.html', {'accounts': accounts,
-                                          'form': form,
-                                          'history': history_items})
+                                                   'form': form,
+                                                   'history': history_items})
 
 
 @login_required
@@ -137,7 +138,7 @@ def edit(request, slug):
         form = EditBankAccountForm(initial={'label': account.label,
                                             'description': account.description})
     return render(request, "accounts/edit.html", {'account': account,
-                                         'form': form})
+                                                  'form': form})
 
 
 @login_required
@@ -163,7 +164,7 @@ def add_money(request, slug):
         if form.is_valid():
             cd = form.cleaned_data
             account.add_money(amount=cd['amount'],
-                              tag=cd['tag'],
+                              tags=cd['tags'],
                               category=cd['category'],
                               description=cd['description'])
             return redirect(reverse("accounts:details", args=[account.slug]))
@@ -205,7 +206,7 @@ def move_money(request, slug):
             cd = form.cleaned_data
             account.move_money(to_account=cd['account'],
                                amount=cd['amount'],
-                               tag=cd['tag'],
+                               tags=cd['tr_tags'],
                                category=cd['category'],
                                description=cd['description'])
             return redirect(reverse("accounts:details", args=[account.slug]))
@@ -213,7 +214,7 @@ def move_money(request, slug):
         form = MoveMoneyForm(request=request, account=account, cat_type=settings.TR_MOVE)
     return render(request, "accounts/money_transfer.html", {'account': account,
                                                             'form': form,
-                                                            'msg': 'Move money'})
+                                                            'msg': 'Move money from {}'.format(account.label)})
 
 
 @login_required

@@ -9,7 +9,8 @@ class CategoryForm(forms.ModelForm):
 
 
 class EditCategoryForm(forms.Form):
-    name = forms.CharField(required=False)
+    cat_type = forms.IntegerField(min_value=1, max_value=4)
+    name = forms.CharField()
 
     class Meta:
         model = Category

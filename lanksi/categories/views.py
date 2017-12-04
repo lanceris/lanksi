@@ -38,7 +38,8 @@ def edit(request, slug):
         if form.is_valid():
             cd = form.cleaned_data
             Category.objects.create(cat_type=cd['cat_type'],
-                                    name=cd['name'])
+                                    name=cd['name'],
+                                    owner=request.user)
             category.delete()
 
             return redirect(reverse("categories:list_"))
@@ -46,7 +47,7 @@ def edit(request, slug):
         form = EditCategoryForm(initial={'cat_type': category.cat_type,
                                          'name': category.name})
     return render(request, "categories/edit.html", {'category': category,
-                                         'form': form})
+                                                    'form': form})
 
 
 @login_required

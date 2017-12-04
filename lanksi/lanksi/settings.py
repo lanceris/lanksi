@@ -143,10 +143,10 @@ TR_MOVE = 3
 TR_EXCHANGE = 4
 
 TR_TYPES = (
-    (TR_ADD, 'add'),
-    (TR_WITHDRAW, 'withdraw'),
-    (TR_MOVE, 'move'),
-    (TR_EXCHANGE, 'exchange'),
+    (TR_ADD, 'Add'),
+    (TR_WITHDRAW, 'Withdraw'),
+    (TR_MOVE, 'Move'),
+    (TR_EXCHANGE, 'Exchange'),
 )
 CURRENCIES = (
         ('RUB', 'Russian Rouble'),

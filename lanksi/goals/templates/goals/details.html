@@ -2,10 +2,10 @@
 
 {% block content %}
 
-<h2>Account: {{ account.label }}</h2>
-<a href="{% url "accounts:list_" %}">К списку счетов</a>
+<h2>Goal: {{ goal.name }}</h2>
+<a href="{% url "goals:list_" %}">Go to goals list</a>
 <br><br>
-<strong>Balance: {{ account.balance }}</strong>
+<strong>Remained to save up: {{ goal.money }}</strong>
 
 <p>{{ account.description }}<p>
 
