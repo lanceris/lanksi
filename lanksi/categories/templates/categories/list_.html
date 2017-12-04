@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+Hello
+{% endblock %}
+
+{% block content %}
+    <a href="{% url "categories:add" %}">New category</a>
+    <p>Hello, {{ request.user }}</p>
+    {% for category in categories %}
+        <ul>
+            <li class="category">
+                <a href="{% url "categories:details" category.slug %}">{{ category.name }}</a>
+                <br>
+                {{ category.cat_type }}
+                <br>
+                Создана {{ category.created }}
+                Изменена {{ category.updated }}
+            </li>
+        </ul>
+    {% endfor %}
+{% endblock %}

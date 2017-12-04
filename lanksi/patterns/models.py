@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from lanksi.accounts.models import Transaction
+from accounts.models import Transaction
 
 
 class TransactionTemplate(models.Model):

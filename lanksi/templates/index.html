@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Welcome
+{% endblock %}
+
+{% block content %}
+    <ul>
+        <li><a href="{% url "accounts:list_" %}">Accounts</a></li>
+        <li><a href="{% url "categories:list_" %}">Categories</a></li>
+        <li><a href="{% url "goals:list_" %}">Goals</a></li>
+        <li><a href="{% url "patterns:list_" %}">Patterns</a></li>
+    </ul>
+{% endblock %}

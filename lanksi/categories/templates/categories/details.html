@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Category: {{ category.label }}</h2>
+<a href="{% url "categories:list_" %}">To categories list</a>
+
+<p>{{ category.description }}</p>
+<p>Category type: {{ category.cat_type }}</p>
+
+
+<ul>
+    <li><a href="{% url "categories:edit" category.slug %}">Edit category</a></li>
+    <li><a href="{% url "categories:delete" category.slug %}">Delete category</a></li>
+</ul>
+
+{% endblock %}

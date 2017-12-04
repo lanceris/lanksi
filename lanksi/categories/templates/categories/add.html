@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}
-Edit your account
-{% endblock %}
-
 {% block content %}
-    <a href="{% url "account_details" account.slug %}">Назад</a>
-    <form method="post">
+
+    <h2>Add Account</h2>
+
+    <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Save">
     </form>
+
 {% endblock %}

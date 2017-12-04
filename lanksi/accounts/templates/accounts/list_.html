@@ -11,7 +11,7 @@ Hello
     {% for account in accounts %}
         <ul>
             <li class="bankaccount">
-                <a href="{% url "account:details" account.slug %}">{{ account.label }}</a>
+                <a href="{% url "accounts:details" account.slug %}">{{ account.label }}</a>
                 <br>
                 {{ account.balance }} {{ account.currency }}
                 <br>

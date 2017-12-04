@@ -1,34 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.transaction import atomic
+from django.conf import settings
 from autoslug import AutoSlugField
 from taggit.managers import TaggableManager
-from lanksi.categories.models import Category
+from categories.models import Category
 
-TR_ADD = 1
-TR_WITHDRAW = 2
-TR_MOVE = 3
-TR_EXCHANGE = 4
 
-TR_TYPES = (
-    (TR_ADD, 'add'),
-    (TR_WITHDRAW, 'withdraw'),
-    (TR_MOVE, 'move'),
-    (TR_EXCHANGE, 'exchange'),
-)
-CURRENCIES = (
-        ('RUB', 'Russian Rouble'),
-        ('USD', 'US Dollar'),
-        ('EUR', 'Euro')
-    )
 
 
 class BankAccount(models.Model):
-    label = models.CharField(max_length=255, unique=True)
-    slug = AutoSlugField(populate_from='label')
+    label = models.CharField(max_length=255)
+    slug = AutoSlugField(populate_from='label', unique=True)
     creation_date = models.DateField(auto_now_add=True, editable=False)
     currency = models.CharField(max_length=3,
-                                choices=CURRENCIES,
+                                choices=settings.CURRENCIES,
                                 default='RUB')
 
     balance = models.DecimalField(max_digits=12,
@@ -41,23 +27,23 @@ class BankAccount(models.Model):
         return self.label
 
     @atomic
-    def add_money(self, amount, tag, description):
+    def add_money(self, amount, tag, category, description):
         self.balance += amount
-        transaction = self._create_transaction(TR_ADD, amount, tag, description)
+        transaction = self._create_transaction(settings.TR_ADD, amount, tag, category, description)
         self.save()
         transaction.save()
 
     @atomic
-    def withdraw_money(self, amount, tag, description):
+    def withdraw_money(self, amount, tag, category, description):
         if (self.balance - amount) < 0:
             raise Exception("Withdraw amount couldn't be more than account balance")
         self.balance -= amount
-        transaction = self._create_transaction(TR_WITHDRAW, amount, tag, description)
+        transaction = self._create_transaction(settings.TR_WITHDRAW, amount,  tag, category, description)
         self.save()
         transaction.save()
 
     @atomic
-    def move_money(self, to_account, amount, tag, description):
+    def move_money(self, to_account, amount, category, tag, description):
         if (self.balance - amount) < 0:
             raise Exception("Withdraw amount couldn't be more than account balance")
         if self.currency != to_account.currency:
@@ -66,12 +52,12 @@ class BankAccount(models.Model):
             raise Exception("Sender and recipient accounts are the same")
         self.balance -= amount
         to_account.balance += amount
-        transaction = self._create_transaction(TR_MOVE, amount, tag, description, to_account)
+        transaction = self._create_transaction(settings.TR_MOVE, amount, tag, category, description, to_account)
         self.save()
         to_account.save()
         transaction.save()
 
-    def _create_transaction(self, tr_type, amount, tag, description, recipient=None):
+    def _create_transaction(self, tr_type, amount, tag, category, description, recipient=None):
         if amount < 0:
             raise Exception("Invalid amount")
         recipient_balance = None
@@ -81,6 +67,7 @@ class BankAccount(models.Model):
                            tr_to=recipient,
                            tr_amount=amount,
                            tr_tag=tag,
+                           category=category,
                            balance=self.balance,
                            recipient_balance=recipient_balance,
                            comment=description)
@@ -94,12 +81,12 @@ class Transaction(models.Model):
     tr_amount = models.DecimalField(max_digits=12,
                                     decimal_places=2,
                                     default=0)
-    tr_type = models.SmallIntegerField(choices=TR_TYPES)
+    tr_type = models.SmallIntegerField(choices=settings.TR_TYPES)
     tr_tag = TaggableManager()
     category = models.ForeignKey(Category, blank=True, null=True)
     balance = models.DecimalField(max_digits=12, decimal_places=2)
     recipient_balance = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     currency = models.CharField(max_length=3,
-                                choices=CURRENCIES,
+                                choices=settings.CURRENCIES,
                                 default='RUB')
 

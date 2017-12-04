@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 from lanksi import secret
+from django.utils.translation import ugettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,12 +40,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
+    'categories',
+    'goals',
+    'patterns',
     'taggit',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -105,6 +110,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
+LANGUAGES = [
+    ('de', _('German')),
+    ('en', _('English')),
+]
 
 LANGUAGE_CODE = 'en-us'
 
@@ -126,3 +135,21 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'files', 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'files', 'media')
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+
+TR_ADD = 1
+TR_WITHDRAW = 2
+TR_MOVE = 3
+TR_EXCHANGE = 4
+
+TR_TYPES = (
+    (TR_ADD, 'add'),
+    (TR_WITHDRAW, 'withdraw'),
+    (TR_MOVE, 'move'),
+    (TR_EXCHANGE, 'exchange'),
+)
+CURRENCIES = (
+        ('RUB', 'Russian Rouble'),
+        ('USD', 'US Dollar'),
+        ('EUR', 'Euro')
+)

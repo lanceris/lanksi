@@ -26,10 +26,11 @@ urlpatterns = [
     url(r'^register/$', bank_views.register, name='register'),
     url(r'^accounts/login/$', auth_views.login, name='login'),
     url(r'^account/logout/$', auth_views.logout, name='logout'),
-    url(r'^', include('accounts.urls', namespace='accounts')),
     url(r'^categories/', include('categories.urls', namespace='categories')),
     url(r'^goals/', include('goals.urls', namespace='goals')),
     url(r'^patterns/', include('patterns.urls', namespace='patterns')),
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
+    url(r'^', bank_views.IndexView.as_view(), name='index')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
