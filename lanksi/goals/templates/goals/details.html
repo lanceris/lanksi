@@ -5,16 +5,13 @@
 <h2>Goal: {{ goal.name }}</h2>
 <a href="{% url "goals:list_" %}">Go to goals list</a>
 <br><br>
-<strong>Remained to save up: {{ goal.money }}</strong>
+<strong>Remained to save up: {{ goal.get_money_left }}</strong>
 
-<p>{{ account.description }}<p>
+<p>{{ goal.description }}<p>
 
 <ul>
-    <li><a href="{% url "accounts:edit" account.slug %}">Edit account</a></li>
-    <li><a href="{% url "accounts:delete" account.slug %}">Delete account</a></li>
-	<li><a href="{% url "accounts:add_money" account.slug %}" class="plus">Add money</a></li>
-	<li><a href="{% url "accounts:withdraw_money" account.slug %}" class="minus">Withdraw money</a></li>
-	<li><a href="{% url "accounts:move_money" account.slug %}" class="move">Move money to another account</a></li>
+    <li><a href="{% url "goals:edit" goal.id %}">Edit goal</a></li>
+    <li><a href="{% url "goals:delete" goal.id %}">Delete goal</a></li>
 </ul>
 
 {% endblock %}

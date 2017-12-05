@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block title %}
-Edit your account
+Edit your goal
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "accounts:details" account.slug %}">Назад</a>
+    <a href="{% url "goals:details" goal.id %}">Назад</a>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

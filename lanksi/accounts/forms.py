@@ -47,6 +47,7 @@ class MoveMoneyForm(forms.ModelForm):
         self.cat_type = kwargs.pop('cat_type')
         super(MoveMoneyForm, self).__init__(*args, **kwargs)
         self.fields['account'].queryset = BankAccount.objects.filter(owner=self.request.user)\
+                                                             .filter(currency=self.acc.currency)\
                                                              .exclude(slug=self.acc.slug)
         self.fields['category'].queryset = Category.objects.filter(owner=self.request.user) \
                                                            .filter(cat_type=self.cat_type)

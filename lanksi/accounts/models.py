@@ -80,11 +80,10 @@ class Transaction(models.Model):
                                     decimal_places=2,
                                     default=0)
     tr_type = models.SmallIntegerField(choices=settings.TR_TYPES)
-    tr_tags = TaggableManager()
+    tr_tags = TaggableManager(blank=True)
     category = models.ForeignKey(Category, blank=True, null=True)
     balance = models.DecimalField(max_digits=12, decimal_places=2)
     recipient_balance = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     currency = models.CharField(max_length=3,
                                 choices=settings.CURRENCIES,
                                 default='RUB')
-

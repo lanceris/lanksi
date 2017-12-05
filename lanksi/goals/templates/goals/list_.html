@@ -13,9 +13,13 @@ Hello
             <li class="goal">
                 <a href="{% url "goals:details" goal.id %}">{{ goal.name }}</a>
                 <br>
-                {{ goal.money }} {{ goal.currency }}
+                Накоплено: {{ goal.money_saved }} {{ goal.currency }}
+                <br>
+                Осталось накопить: {{ goal.get_money_left }} {{ goal.currency }}
+                <a href="#">Добавить денег</a>
                 <br>
                 Создана {{ goal.created }}
+                <br>
                 Изменена {{ goal.updated }}
             </li>
         </ul>

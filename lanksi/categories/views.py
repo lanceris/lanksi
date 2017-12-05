@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from categories.models import Category
-from categories.forms import CategoryForm, EditCategoryForm
-
+from categories.forms import CategoryForm
 
 @login_required
 def list_(request):
@@ -34,7 +33,7 @@ def details(request, slug):
 def edit(request, slug):
     category = get_object_or_404(Category, slug=slug, owner=request.user)
     if request.method == 'POST':
-        form = EditCategoryForm(request.POST)
+        form = CategoryForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
             Category.objects.create(cat_type=cd['cat_type'],
@@ -44,7 +43,7 @@ def edit(request, slug):
 
             return redirect(reverse("categories:list_"))
     else:
-        form = EditCategoryForm(initial={'cat_type': category.cat_type,
+        form = CategoryForm(initial={'cat_type': category.cat_type,
                                          'name': category.name})
     return render(request, "categories/edit.html", {'category': category,
                                                     'form': form})
