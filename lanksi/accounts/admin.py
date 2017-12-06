@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import BankAccount, Transaction
+from .models import BankAccount, Transaction, ExchangeRate
 
 
 @admin.register(BankAccount)
@@ -13,3 +13,4 @@ class BankAccountAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Transaction)
+admin.site.register(ExchangeRate)

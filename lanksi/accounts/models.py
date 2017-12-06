@@ -5,6 +5,7 @@ from django.conf import settings
 from autoslug import AutoSlugField
 from taggit.managers import TaggableManager
 from categories.models import Category
+from django.utils.timezone import now
 
 
 class BankAccount(models.Model):
@@ -99,3 +100,13 @@ class Transaction(models.Model):
         except:
             msg = self.tr_from.label + " -> " + "None" + " at " + self.created.strftime('%d/%m/%Y %H:%M:%S')
         return msg
+
+
+class ExchangeRate(models.Model):
+    base_currency = models.CharField(max_length=3)
+    other_currency = models.CharField(max_length=3)
+    value = models.DecimalField(max_digits=8, decimal_places=3)
+    date = models.DateField(editable=True, default=now)
+
+    def __str__(self):
+        return self.base_currency+"/"+self.other_currency

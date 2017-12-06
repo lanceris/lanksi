@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-from lanksi import secret
+#from lanksi.lanksi import secret
 from django.utils.translation import ugettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = secret.project_secret_key
+SECRET_KEY = 'ororo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 3-rd party
-    'taggit',
+    # 'taggit',
+    # 'django_celery_results',
     # Project apps
     'accounts',
     'categories',
@@ -156,3 +157,6 @@ CURRENCIES = (
         ('USD', 'US Dollar'),
         ('EUR', 'Euro')
 )
+
+# celery
+# CELERY_RESULT_BACKEND = 'django-db'

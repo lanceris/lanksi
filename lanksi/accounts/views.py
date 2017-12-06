@@ -16,6 +16,9 @@ class IndexView(TemplateView):
 
     template_name = 'index.html'
 
+    def get_currency_rates(self):
+        pass
+
     def get_context_data(self, **kwargs):
         updated = now()
         name1 = 'USD/RUB'
@@ -27,8 +30,7 @@ class IndexView(TemplateView):
                               {'name': name1,
                                'value': value1},
                               {'name': name2,
-                               'value': value2}
-                                    ]
+                               'value': value2}]
                           }
                 }
 
