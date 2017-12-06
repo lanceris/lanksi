@@ -1,3 +1,4 @@
 from django.contrib import admin
+from patterns.models import TransactionTemplate
 
-# Register your models here.
+admin.site.register(TransactionTemplate)

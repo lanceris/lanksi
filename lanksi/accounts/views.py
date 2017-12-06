@@ -9,10 +9,28 @@ from .models import BankAccount, Transaction
 from .forms import TransactionForm, MoveMoneyForm,\
                     FilterHistoryForm, AddBankAccountForm, \
                     EditBankAccountForm
+from django.utils.timezone import now
 
 
 class IndexView(TemplateView):
+
     template_name = 'index.html'
+
+    def get_context_data(self, **kwargs):
+        updated = now()
+        name1 = 'USD/RUB'
+        name2 = 'USD/EUR'
+        value1 = '58.67'
+        value2 = '0.88'
+        return {'rates': {'updated': updated,
+                          'values': [
+                              {'name': name1,
+                               'value': value1},
+                              {'name': name2,
+                               'value': value2}
+                                    ]
+                          }
+                }
 
 
 def register(request):

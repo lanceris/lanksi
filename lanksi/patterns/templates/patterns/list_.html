@@ -16,6 +16,10 @@ Hello
                 {{ pattern.transaction }}
                 <br>
                 {{ pattern.description }}
+                <br>
+                <a href="{% url "patterns:edit" pattern.id %}">Edit</a>
+                <br>
+                <a href="{% url "patterns:delete" pattern.id %}">Delete</a>
             </li>
         </ul>
     {% endfor %}

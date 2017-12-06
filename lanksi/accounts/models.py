@@ -92,3 +92,10 @@ class Transaction(models.Model):
     currency = models.CharField(max_length=3,
                                 choices=settings.CURRENCIES,
                                 default='RUB')
+
+    def __str__(self):
+        try:
+            msg = self.tr_from.label + " -> " + self.tr_to.label + " at " + self.created.strftime('%d/%m/%Y')
+        except:
+            msg = self.tr_from.label + " -> " + "None" + " at " + self.created.strftime('%d/%m/%Y %H:%M:%S')
+        return msg
