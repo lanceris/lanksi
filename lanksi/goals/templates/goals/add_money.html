@@ -1,11 +1,16 @@
 {% extends "base.html" %}
 
 {% block title %}
-Add money to {{  }}
+Add money to {{ goal.name }}
 {% endblock %}
 
 {% block content %}
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save">
+    <h2>
+        Add money to {{ goal.name }}
+    </h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
 {% endblock %}

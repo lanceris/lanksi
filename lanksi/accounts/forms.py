@@ -15,7 +15,7 @@ class AddBankAccountForm(forms.ModelForm):
 
 
 class EditBankAccountForm(forms.ModelForm):
-    label = forms.CharField(required=False)
+    label = forms.CharField()
 
     class Meta:
         model = BankAccount

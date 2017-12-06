@@ -1,6 +1,6 @@
 from django import forms
 from goals.models import Goal
-from decimal import Decimal
+from accounts.models import BankAccount
 
 
 class GoalForm(forms.ModelForm):
@@ -10,11 +10,19 @@ class GoalForm(forms.ModelForm):
 
 
 class AddMoneyForm(forms.Form):
-    def __init__(self, **kwargs):
-        self.goal = kwargs.pop('goal')
-        super(AddMoneyForm, self).__init__(**kwargs)
+    class Meta:
+        model = Goal
 
+    def __init__(self, *args, **kwargs):
+        self.goal = kwargs.pop('goal')
+        self.request = kwargs.pop('request')
+        super(AddMoneyForm, self).__init__(*args, **kwargs)
+        self.fields['acc_from'].queryset = BankAccount.objects.filter(owner=self.request.user)\
+                                                              .filter(currency=self.goal.currency)
+        self.fields['amount'].max_value = self.goal.get_money_left()
+
+    acc_from = forms.ModelChoiceField(queryset=None, required=True, label='Take money from')
     amount = forms.DecimalField(max_digits=26,
                                 decimal_places=2,
                                 min_value=0,
-                                max_value=())
+                                max_value=None)

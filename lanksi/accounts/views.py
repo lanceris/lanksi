@@ -164,7 +164,7 @@ def add_money(request, slug):
         if form.is_valid():
             cd = form.cleaned_data
             account.add_money(amount=cd['amount'],
-                              tags=cd['tags'],
+                              tags=cd['tr_tags'],
                               category=cd['category'],
                               description=cd['description'])
             return redirect(reverse("accounts:details", args=[account.slug]))

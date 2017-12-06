@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from goals.models import Goal
-from goals.forms import GoalForm
+from goals.forms import GoalForm, AddMoneyForm
 
 
 @login_required
@@ -27,16 +27,18 @@ def add(request):
 @login_required
 def add_money(request, id):
     goal = get_object_or_404(Goal, id=id, owner=request.user)
+
     if request.method == 'POST':
-        form = AddMoneyForm(request.POST)
+        form = AddMoneyForm(request.POST, goal=goal, request=request)
         if form.is_valid():
-            new_cat = form.save(commit=False)
-            new_cat.owner = request.user
-            new_cat.save()
-            return redirect(reverse("categories:list_"))
+            cd = form.cleaned_data
+            goal.add_money(amount=cd['amount'],
+                           acc_from=cd['acc_from'])
+            return redirect(reverse("goals:list_"))
     else:
-        form = AddMoneyForm()
-    return render(request, 'categories/add.html', {'form': form})
+        form = AddMoneyForm(goal=goal, request=request)
+    return render(request, 'goals/add_money.html', {'goal': goal,
+                                                    'form': form})
 
 
 @login_required

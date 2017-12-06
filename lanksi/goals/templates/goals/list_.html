@@ -16,7 +16,7 @@ Hello
                 Накоплено: {{ goal.money_saved }} {{ goal.currency }}
                 <br>
                 Осталось накопить: {{ goal.get_money_left }} {{ goal.currency }}
-                <a href="#">Добавить денег</a>
+                <a href="{% url "goals:add_money" goal.id %}">Добавить денег</a>
                 <br>
                 Создана {{ goal.created }}
                 <br>
