@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block title %}
-Edit your account
+Edit {{ pattern.name }}
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "accounts:details" account.slug %}">Назад</a>
+    <a href="{% url "patterns:list_" pattern.id %}">Назад</a>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

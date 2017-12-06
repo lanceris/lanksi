@@ -6,81 +6,17 @@ Hello
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "accounts:add" %}">New account</a>
+    <a href="{% url "patterns:add" %}">New pattern</a>
     <p>Hello, {{ request.user }}</p>
-    {% for account in accounts %}
+    {% for pattern in patterns %}
         <ul>
             <li class="bankaccount">
-                <a href="{% url "accounts:details" account.slug %}">{{ account.label }}</a>
+                {{ pattern.name }}
                 <br>
-                {{ account.balance }} {{ account.currency }}
+                {{ pattern.transaction }}
                 <br>
-                Создана {{ account.creation_date }}
+                {{ pattern.description }}
             </li>
         </ul>
     {% endfor %}
-
-    <h2>History</h2>
-
-    Filter:
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Apply">
-    </form>
-
-    <table class="table">
-        <tr>
-            <th> </th>
-            <th>Date</th>
-            <th>Credit</th>
-            <th>Debit</th>
-            <th>Balance</th>
-            <th>From</th>
-            <th>To</th>
-            <th>Tag</th>
-            <th>Description</th>
-            <th> </th>
-        </tr>
-    {% for item in history %}\
-        <tr>
-            <td>
-                {% if item.type == 1 %}
-                    <img src="{% static 'accounts/img/plus.png' %}" width="32px" height="32px" class="history-type">
-                {% elif item.type == 2 %}
-                    <img src="{% static 'accounts/img/minus.png' %}" width="32px" height="32px" class="history-type">
-                {% elif item.type == 3 %}
-                    <img src="{% static 'accounts/img/move.png' %}" width="32px" height="32px" class="history-type">
-                {% endif%}
-            </td>
-            <td>
-                {{item.datetime}}
-            </td>
-            <td>
-                {{item.credit}}
-            </td>
-            <td>
-                {{item.debit}}
-            </td>
-            <td>
-                {{item.balance}}({{item.balance_before}})
-            </td>
-            <td>
-                {{item.from}}
-            </td>
-            <td>
-                {{ item.to }}
-            </td>
-            <td>
-                {{item.tag}}
-            </td>
-            <td>
-                {{item.description}}
-            </td>
-            <td>
-                <a href="#">Save this transaction as template</a>
-            </td>
-        </tr>
-    {% endfor %}
-    </table>
 {% endblock %}

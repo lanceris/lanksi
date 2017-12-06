@@ -55,6 +55,11 @@ class BankAccount(models.Model):
         to_account.save()
         transaction.save()
 
+    @atomic
+    def exchange_money(self, to_account, amount, currency_from, currency_to, exchange_rate, tags, description):
+        #TODO
+        pass
+
     def _create_transaction(self, tr_type, amount, tags, category, description, recipient=None):
         if amount < 0:
             raise Exception("Invalid amount")

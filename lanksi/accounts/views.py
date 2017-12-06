@@ -32,7 +32,7 @@ def get_history(accounts, queryset):
     history_items = []
     for t in queryset:
         #FIXME: tags not shows up properly
-        item = {'type': None, 'description': t.comment, 'datetime': t.created, 'tags': t.tr_tags,
+        item = {'transaction_id': t.id, 'type': None, 'description': t.comment, 'datetime': t.created, 'tags': t.tr_tags,
                 'debit': '', 'credit': '', 'from': '', 'to': ''}
         if t.tr_type == settings.TR_ADD:
             item['type'] = 1

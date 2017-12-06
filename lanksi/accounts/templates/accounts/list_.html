@@ -80,7 +80,8 @@ Hello
                 {{item.description}}
             </td>
             <td>
-                <a href="#">Save this transaction as template</a>
+                {{ item.transaction_id }}
+                <a href="{% url "patterns:add" %}">Save this transaction as template</a>
             </td>
         </tr>
     {% endfor %}
