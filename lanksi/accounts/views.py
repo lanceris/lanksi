@@ -20,7 +20,11 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         rates = ExchangeRate.objects.all()
-        return {'rates': rates}
+        accounts = BankAccount.objects.filter(owner=self.request.user)
+        sums = []
+        return {'rates': rates,
+                'accounts': accounts,
+                'sums': sums}
 
 
 def register(request):

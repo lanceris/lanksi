@@ -23,11 +23,25 @@
                         </li>
                     {% endfor %}
                 </ul>
-            <p>
-                Last updated:
-                <br>
-                {{ rates.0.date }}
-            </p>
+                <p>
+                    Last updated:
+                    <br>
+                    {{ rates.0.date }}
+                </p>
+            </li>
+            <li>
+                <p>Summary table of account balances:</p>
+                {% for account in accounts %}
+                    {{ account.label }}
+                    <br>
+                    {{ account.balance }} {{ account.currency }}
+                {% endfor %}
+                Total:
+                {% for sum in sums %}
+                    {{ sum.value }} {{ sum.currency }}
+                {% endfor %}
+
+
             </li>
         </ul>
     {% endif %}
