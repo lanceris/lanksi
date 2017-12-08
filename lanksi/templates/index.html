@@ -15,9 +15,9 @@
             <li>
                 <p>Today's exchange rates:</p>
                 <ul>
-                    {% for rate in rates.values %}
+                    {% for rate in rates %}
                         <li>
-                            {{ rate.name }}
+                            {{ rate }}
                             <br>
                             {{ rate.value }}
                         </li>
@@ -26,7 +26,7 @@
             <p>
                 Last updated:
                 <br>
-                {{ rates.updated }}
+                {{ rates.0.date }}
             </p>
             </li>
         </ul>

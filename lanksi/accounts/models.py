@@ -57,9 +57,22 @@ class BankAccount(models.Model):
         transaction.save()
 
     @atomic
-    def exchange_money(self, to_account, amount, currency_from, currency_to, exchange_rate, tags, description):
-        #TODO
-        pass
+    def exchange_money(self,
+                       to_account,
+                       amount,
+                       currency_from,
+                       currency_to,
+                       tags,
+                       category,
+                       description):
+        exchange_rate = ExchangeRate.objects.get(base_currency=currency_to,
+                                                 other_currency=currency_from).value
+        self.balance -= amount
+        to_account.balance += amount/exchange_rate
+        transaction = self._create_transaction(settings.TR_EXCHANGE, amount, tags, category, description)
+        self.save()
+        transaction.save()
+        to_account.save()
 
     def _create_transaction(self, tr_type, amount, tags, category, description, recipient=None):
         if amount < 0:

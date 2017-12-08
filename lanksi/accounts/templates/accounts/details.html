@@ -15,6 +15,7 @@
 	<li><a href="{% url "accounts:add_money" account.slug %}" class="plus">Add money</a></li>
 	<li><a href="{% url "accounts:withdraw_money" account.slug %}" class="minus">Withdraw money</a></li>
 	<li><a href="{% url "accounts:move_money" account.slug %}" class="move">Move money to another account</a></li>
+    <li><a href="{% url "accounts:exchange_money" account.slug %}" class="exchange">Exchange money</a></li>
 </ul>
 
 {% endblock %}

@@ -28,8 +28,16 @@ class Goal(models.Model):
         elif acc_from.balance - amount < 0:
             raise Exception('Not enough money')
         else:
-            self.money_saved += amount
-            acc_from.withdraw_money(amount, '', Category.objects.get(name='To goal'), '')
-            self.save()
-
+            if Category.objects.filter(name='To goal').exists():
+                self.money_saved += amount
+                acc_from.withdraw_money(amount, '', Category.objects.get(name='To goal'), '')
+                self.save()
+            else:
+                new_cat = Category.objects.create(cat_type=2,
+                                                  name='To goal',
+                                                  owner=self.owner)
+                new_cat.save()
+                self.money_saved += amount
+                acc_from.withdraw_money(amount, '', Category.objects.get(name='To goal'), '')
+                self.save()
 

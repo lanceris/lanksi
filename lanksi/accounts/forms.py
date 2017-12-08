@@ -52,6 +52,28 @@ class MoveMoneyForm(forms.ModelForm):
         self.fields['category'].queryset = Category.objects.filter(owner=self.request.user) \
                                                            .filter(cat_type=self.cat_type)
 
+
+    class Meta:
+        model = Transaction
+        fields = ('account', 'amount', 'category', 'tr_tags', 'description')
+
+    account = forms.ModelChoiceField(queryset=None)
+    amount = forms.DecimalField(max_digits=12, decimal_places=2, min_value=0)
+    category = forms.ModelChoiceField(queryset=None, required=False)
+    description = forms.CharField(widget=forms.Textarea(), required=False)
+
+
+class ExchangeForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        self.acc = kwargs.pop('account')
+        self.cat_type = kwargs.pop('cat_type')
+        super(ExchangeForm, self).__init__(*args, **kwargs)
+        self.fields['account'].queryset = BankAccount.objects.filter(owner=self.request.user)\
+                                                             .exclude(slug=self.acc.slug)
+        self.fields['category'].queryset = Category.objects.filter(owner=self.request.user) \
+                                                           .filter(cat_type=self.cat_type)
+
     class Meta:
         model = Transaction
         fields = ('account', 'amount', 'category', 'tr_tags', 'description')
@@ -89,3 +111,5 @@ class FilterHistoryForm(forms.Form):
     keywords = forms.CharField(required=False)
     account = forms.ModelChoiceField(queryset=None, required=False)
     category = forms.ModelChoiceField(queryset=None, required=False)
+
+

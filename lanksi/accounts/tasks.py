@@ -1,24 +1,26 @@
-from celery import Celery, shared_task
-from celery.schedules import crontab
 import requests
-from time import sleep
 from accounts.models import ExchangeRate
+from time import sleep
+from celery import task
+from lanksi.celery import app
+from celery.utils.log import get_task_logger
+from django.conf import settings
+from celery.schedules import crontab
 
-app = Celery('lanksi',
-             broker='amqp://',
-             backend='amqp://')
+logger = get_task_logger(__name__)
 
+app.conf.beat_schedule = {
+    'update_rates_everyday': {
+        'task': 'accounts.tasks.get_currency_rates',
+        'schedule': crontab(0, 0), # Update every midnight
+        'args': (settings.CURRENCIES,)
+    }
+}
 
-@app.on_after_configure.connect
-def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(
-        crontab(),
-        get_currency_rates.s(),
-    )
-
-
-@shared_task
+@task
 def get_currency_rates(currencies):
+    logger.info('Getting currency rates')
+    ExchangeRate.objects.all().delete()
     for each in currencies:
         payload = {'base': each[0],
                    'symbols': ",".join([i[0] for i in currencies if i != each[0]])}
@@ -28,5 +30,4 @@ def get_currency_rates(currencies):
                                         other_currency=other_currency,
                                         value=value,
                                         date=r['date'])
-            print(r['base'])
-            sleep(0.1)
+            sleep(0.5)

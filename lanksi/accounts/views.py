@@ -1,38 +1,26 @@
+from time import sleep
+
+from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404, reverse
-from django.conf import settings
 from django.views.generic import TemplateView
+import requests
 
-from .models import BankAccount, Transaction
-from .forms import TransactionForm, MoveMoneyForm,\
+from accounts.models import BankAccount, Transaction, ExchangeRate
+from accounts.forms import TransactionForm, MoveMoneyForm,\
                     FilterHistoryForm, AddBankAccountForm, \
-                    EditBankAccountForm
-from django.utils.timezone import now
+                    EditBankAccountForm, ExchangeForm
 
 
 class IndexView(TemplateView):
 
     template_name = 'index.html'
 
-    def get_currency_rates(self):
-        pass
-
     def get_context_data(self, **kwargs):
-        updated = now()
-        name1 = 'USD/RUB'
-        name2 = 'USD/EUR'
-        value1 = '58.67'
-        value2 = '0.88'
-        return {'rates': {'updated': updated,
-                          'values': [
-                              {'name': name1,
-                               'value': value1},
-                              {'name': name2,
-                               'value': value2}]
-                          }
-                }
+        rates = ExchangeRate.objects.all()
+        return {'rates': rates}
 
 
 def register(request):
@@ -203,7 +191,7 @@ def withdraw_money(request, slug):
         if form.is_valid():
             cd = form.cleaned_data
             account.withdraw_money(amount=cd['amount'],
-                                   tag=cd['tag'],
+                                   tags=cd['tr_tags'],
                                    category=cd['category'],
                                    description=cd['description'])
             return redirect(reverse("accounts:details", args=[account.slug]))
@@ -240,6 +228,25 @@ def move_money(request, slug):
 @login_required
 def exchange_money(request, slug):
     account = get_object_or_404(BankAccount, slug=slug, owner=request.user)
-    #TODO: exchange logic
+    if request.method == 'POST':
+        form = ExchangeForm(request.POST,
+                            request=request,
+                            account=account,
+                            cat_type=settings.TR_EXCHANGE)
+        if form.is_valid():
+            cd = form.cleaned_data
+            account.exchange_money(to_account=cd['account'],
+                                   amount=cd['amount'],
+                                   currency_from=account.currency,
+                                   currency_to=cd['account'].currency,
+                                   tags=cd['tr_tags'],
+                                   category=cd['category'],
+                                   description=cd['description'])
+            return redirect(reverse("accounts:details", args=[account.slug]))
+    else:
+        form = ExchangeForm(request=request, account=account, cat_type=settings.TR_EXCHANGE)
+    return render(request, "accounts/money_transfer.html", {'account': account,
+                                                            'form': form,
+                                                            'msg': 'Exchange money'})
 
 #endregion operations
