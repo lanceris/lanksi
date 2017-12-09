@@ -74,9 +74,9 @@ Hello
                 {{ item.to }}
             </td>
             <td>
-{#                {% for tag in item.tags %}#}
-{#                    {{ tag }}#}
-{#                {% endfor %}#}
+                    {% for tag in item.tags %}
+                        <li> {{ tag.name }} </li>
+                    {% endfor %}
             </td>
             <td>
                 {{item.description}}

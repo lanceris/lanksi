@@ -3,3 +3,5 @@ db.sqlite3
 secret.py
 __pycache__/
 media/
+config.txt
+*.xcf

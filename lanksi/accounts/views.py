@@ -15,15 +15,15 @@ def get_sums(spis):
     gena = []
     new_gena = []
     for each in spis:
-        entry = {'currency': each['currency'], 'values': [float(each['balance'])]}
+        entry = {'currency': each['currency'], 'values': [each['balance']]}
         if each['currency'] not in [i.get('currency') for i in gena]:
             gena.append(entry)
         else:
             for j, _ in enumerate(gena):
                 if each['currency'] == gena[j]['currency']:
-                    gena[j]['values'].append(float(each['balance']))
+                    gena[j]['values'].append(each['balance'])
     for each in gena:
-        new_gena.append({'currency': each['currency'], 'value': sum(each['values'])})
+        new_gena.append({'currency': each['currency'], 'value': str(sum(each['values']))})
     return new_gena
 
 
@@ -60,7 +60,7 @@ def get_history(accounts, queryset):
     history_items = []
     for t in queryset:
         #FIXME: tags not shows up properly
-        item = {'transaction_id': t.id, 'type': None, 'description': t.comment, 'datetime': t.created, 'tags': t.tr_tags,
+        item = {'transaction_id': t.id, 'type': None, 'description': t.comment, 'datetime': t.created, 'tags': t.tr_tags.all,
                 'debit': '', 'credit': '', 'from': '', 'to': ''}
         if t.tr_type == settings.TR_ADD:
             item['type'] = 1
@@ -93,6 +93,11 @@ def get_history(accounts, queryset):
         history_items.append(item)
 
     return history_items
+
+
+@login_required
+def manage_credentials(request):
+    return render(request, 'accounts/credentials.html', {})
 
 
 @login_required

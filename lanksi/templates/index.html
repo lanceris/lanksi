@@ -12,6 +12,7 @@
             <li><a href="{% url "categories:list_" %}">Categories</a></li>
             <li><a href="{% url "goals:list_" %}">Goals</a></li>
             <li><a href="{% url "patterns:list_" %}">Patterns</a></li>
+            <li><a href="#">Import & export credentials</a></li>
             <li>
                 <p>Today's exchange rates:</p>
                 <ul>
@@ -40,8 +41,6 @@
                 {% for sum in sums %}
                     {{ sum.value }} {{ sum.currency }}
                 {% endfor %}
-
-
             </li>
         </ul>
     {% endif %}

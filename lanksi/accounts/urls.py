@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^edit/(?P<slug>[-\w]+)/$', views.edit, name='edit'),
     url(r'^delete/(?P<slug>[-\w]+)/$', views.delete, name='delete'),
     url(r'^confirm-delete/(?P<slug>[-\w]+)$', views.confirm_delete, name='confirm_delete'),
+    url(r'^credentials/$', views.manage_credentials, name='manage_credentials'),
 ]
