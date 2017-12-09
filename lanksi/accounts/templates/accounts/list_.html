@@ -42,7 +42,7 @@ Hello
             <th>Description</th>
             <th> </th>
         </tr>
-    {% for item in history %}\
+    {% for item in history %}
         <tr>
             <td>
                 {% if item.type == 1 %}
@@ -51,6 +51,8 @@ Hello
                     <img src="{% static 'accounts/img/minus.png' %}" width="32px" height="32px" class="history-type">
                 {% elif item.type == 3 %}
                     <img src="{% static 'accounts/img/move.png' %}" width="32px" height="32px" class="history-type">
+                {% elif item.type == 4 %}
+                    <img src="{% static 'accounts/img/exchange.png' %}" width="32px" height="32px" class="history-type">
                 {% endif%}
             </td>
             <td>

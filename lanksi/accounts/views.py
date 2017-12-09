@@ -1,17 +1,30 @@
-from time import sleep
-
 from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.views.generic import TemplateView
-import requests
 
 from accounts.models import BankAccount, Transaction, ExchangeRate
 from accounts.forms import TransactionForm, MoveMoneyForm,\
                     FilterHistoryForm, AddBankAccountForm, \
                     EditBankAccountForm, ExchangeForm
+
+
+def get_sums(spis):
+    gena = []
+    new_gena = []
+    for each in spis:
+        entry = {'currency': each['currency'], 'values': [float(each['balance'])]}
+        if each['currency'] not in [i.get('currency') for i in gena]:
+            gena.append(entry)
+        else:
+            for j, _ in enumerate(gena):
+                if each['currency'] == gena[j]['currency']:
+                    gena[j]['values'].append(float(each['balance']))
+    for each in gena:
+        new_gena.append({'currency': each['currency'], 'value': sum(each['values'])})
+    return new_gena
 
 
 class IndexView(TemplateView):
@@ -20,8 +33,11 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         rates = ExchangeRate.objects.all()
-        accounts = BankAccount.objects.filter(owner=self.request.user)
-        sums = []
+        if self.request.user.is_authenticated():
+            accounts = BankAccount.objects.filter(owner=self.request.user)
+        else:
+            accounts = BankAccount.objects.none()
+        sums = get_sums(accounts.values('currency', 'balance'))
         return {'rates': rates,
                 'accounts': accounts,
                 'sums': sums}
