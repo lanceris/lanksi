@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% block title %}
-Hello
+{% trans "Hello" %}, {{ request.user }}
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "accounts:add" %}">New account</a>
-    <p>Hello, {{ request.user }}</p>
+    <a href="{% url "accounts:add" %}">{% trans "Create new account" %}</a>
+    <p>{% trans "Hello" %}, {{ request.user }}</p>
     {% for account in accounts %}
         <ul>
             <li class="bankaccount">
@@ -15,18 +16,18 @@ Hello
                 <br>
                 {{ account.balance }} {{ account.currency }}
                 <br>
-                Создана {{ account.creation_date }}
+                {% trans "Created" %} {{ account.creation_date }}
             </li>
         </ul>
     {% endfor %}
 
-    <h2>History</h2>
+    <h2>{% trans "History" %}</h2>
 
-    Filter:
+    <p>{% trans "Filter" %}:</p>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Apply">
+        <input type="submit" value="{% trans "Apply" %}">
     </form>
 
     <table class="table">
@@ -83,7 +84,7 @@ Hello
             </td>
             <td>
                 {{ item.transaction_id }}
-                <a href="{% url "patterns:add" %}?trans_id={{ item.transaction_id }}">Save this transaction as template</a>
+                <a href="{% url "patterns:add" %}?trans_id={{ item.transaction_id }}">{% trans "Save as template" %}</a>
             </td>
         </tr>
     {% endfor %}

@@ -1,26 +1,26 @@
 {% extends "base.html" %}
-{% load staticfiles %}
+{% load i18n %}
 
 {% block title %}
-Hello
+{% trans "Hello" %}, {{ request.user }}
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "goals:add" %}">New Goal</a>
+    <a href="{% url "goals:add" %}">{% trans "New Goal" %}</a>
     <p>Hello, {{ request.user }}</p>
     {% for goal in goals %}
         <ul>
             <li class="goal">
                 <a href="{% url "goals:details" goal.id %}">{{ goal.name }}</a>
                 <br>
-                Накоплено: {{ goal.money_saved }} {{ goal.currency }}
+                {% trans "Saved up so far" %}: {{ goal.money_saved }} {{ goal.currency }}
                 <br>
-                Осталось накопить: {{ goal.get_money_left }} {{ goal.currency }}
-                <a href="{% url "goals:add_money" goal.id %}">Добавить денег</a>
+                {% trans "Remained to save up" %}: {{ goal.get_money_left }} {{ goal.currency }}
+                <a href="{% url "goals:add_money" goal.id %}">{% trans "Add money" %}</a>
                 <br>
-                Создана {{ goal.created }}
+                {% trans "Created" %} {{ goal.created }}
                 <br>
-                Изменена {{ goal.updated }}
+                {% trans "Updated" %} {{ goal.updated }}
             </li>
         </ul>
     {% endfor %}

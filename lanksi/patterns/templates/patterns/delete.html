@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-Delete {{ pattern.name }}?
+{% trans "Delete" %} {{ pattern.name }}?
 {% endblock %}
 
 {% block content %}
-    <h1>Delete {{ pattern.name }}?</h1>
-    <a href="{% url "patterns:confirm_delete" pattern.id %}">Yes</a>
-    <a href="{% url "patterns:list_" %}">No, go back</a>
+    <h1>{% trans "Delete" %} {{ pattern.name }}?</h1>
+    <a href="{% url "patterns:confirm_delete" pattern.id %}">{% trans "Yes" %}</a>
+    <a href="{% url "patterns:list_" %}">{% trans "No, go back" %}</a>
 {% endblock %}

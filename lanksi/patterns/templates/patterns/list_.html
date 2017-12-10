@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% load staticfiles %}
+{% load i18n %}
 
 {% block title %}
-Hello
+{% trans "Hello" %}, {{ request.user }}
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "patterns:add" %}">New pattern</a>
-    <p>Hello, {{ request.user }}</p>
+    <a href="{% url "patterns:add" %}">{% trans "New pattern" %}</a>
+    <p>{% trans "Hello" %}, {{ request.user }}</p>
     {% for pattern in patterns %}
         <ul>
             <li class="bankaccount">
@@ -17,9 +17,9 @@ Hello
                 <br>
                 {{ pattern.description }}
                 <br>
-                <a href="{% url "patterns:edit" pattern.id %}">Edit</a>
+                <a href="{% url "patterns:edit" pattern.id %}">{% trans "Edit" %}</a>
                 <br>
-                <a href="{% url "patterns:delete" pattern.id %}">Delete</a>
+                <a href="{% url "patterns:delete" pattern.id %}">{% trans "Delete" %}</a>
             </li>
         </ul>
     {% endfor %}

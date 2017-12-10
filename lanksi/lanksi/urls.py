@@ -19,9 +19,13 @@ from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls.i18n import i18n_patterns
 
 from accounts import views as bank_views
-urlpatterns = [
+urlpatterns = [url(r'^i18n/', include('django.conf.urls.i18n')),
+               url(r'^set-language/', bank_views.set_language, name='set_language'),]
+
+urlpatterns += i18n_patterns(
     url(r'^admin/', admin.site.urls),
     url(r'^register/$', bank_views.register, name='register'),
     url(r'^accounts/login/$', auth_views.login, name='login'),
@@ -31,7 +35,7 @@ urlpatterns = [
     url(r'^patterns/', include('patterns.urls', namespace='patterns')),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^', bank_views.IndexView.as_view(), name='index')
-]
+    )
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += staticfiles_urlpatterns()

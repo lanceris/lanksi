@@ -1,14 +1,15 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-Edit {{ pattern.name }}
+{% trans "Edit" %} {{ pattern.name }}
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "patterns:list_" %}">Назад</a>
+    <a href="{% url "patterns:list_" %}">{% trans "Go back" %}</a>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Save">
+        <input type="submit" value="{% trans "Save" %}">
     </form>
 {% endblock %}

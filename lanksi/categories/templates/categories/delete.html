@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-Delete {{ category.name }}?
+{% trans "Delete" %} {{ category.name }}?
 {% endblock %}
 
 {% block content %}
-    <h1>Delete {{ category.name }}?</h1>
-    <a href="{% url "categories:confirm_delete" category.slug %}">Yes</a>
-    <a href="{% url "categories:details" category.slug %}">No, go back</a>
+    <h1>{% trans "Delete" %} {{ category.name }}?</h1>
+    <a href="{% url "categories:confirm_delete" category.slug %}">{% trans "Yes" %}</a>
+    <a href="{% url "categories:details" category.slug %}">{% trans "No, go back" %}</a>
 {% endblock %}

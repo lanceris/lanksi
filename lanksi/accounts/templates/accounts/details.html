@@ -1,21 +1,22 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 
-<h2>Account: {{ account.label }}</h2>
-<a href="{% url "accounts:list_" %}">К списку счетов</a>
+<h2>{% trans "Account" %}: {{ account.label }}</h2>
+<a href="{% url "accounts:list_" %}">{% trans "Back to accounts list" %}</a>
 <br><br>
-<strong>Balance: {{ account.balance }}</strong>
+<strong>{% trans "Balance" %}: {{ account.balance }}</strong>
 
 <p>{{ account.description }}<p>
 
 <ul>
-    <li><a href="{% url "accounts:edit" account.slug %}">Edit account</a></li>
-    <li><a href="{% url "accounts:delete" account.slug %}">Delete account</a></li>
-	<li><a href="{% url "accounts:add_money" account.slug %}" class="plus">Add money</a></li>
-	<li><a href="{% url "accounts:withdraw_money" account.slug %}" class="minus">Withdraw money</a></li>
-	<li><a href="{% url "accounts:move_money" account.slug %}" class="move">Move money to another account</a></li>
-    <li><a href="{% url "accounts:exchange_money" account.slug %}" class="exchange">Exchange money</a></li>
+    <li><a href="{% url "accounts:edit" account.slug %}">{% trans "Edit account" %}</a></li>
+    <li><a href="{% url "accounts:delete" account.slug %}">{% trans "Delete account" %}</a></li>
+	<li><a href="{% url "accounts:add_money" account.slug %}" class="plus">{% trans "Add money" %}</a></li>
+	<li><a href="{% url "accounts:withdraw_money" account.slug %}" class="minus">{% trans "Withdraw money" %}</a></li>
+	<li><a href="{% url "accounts:move_money" account.slug %}" class="move">{% trans "Transfer money" %}</a></li>
+    <li><a href="{% url "accounts:exchange_money" account.slug %}" class="exchange">{% trans "Exchange money" %}</a></li>
 </ul>
 
 {% endblock %}

@@ -11,6 +11,10 @@ from accounts.forms import TransactionForm, MoveMoneyForm,\
                     EditBankAccountForm, ExchangeForm
 
 
+def set_language(request):
+    return render(request, 'set_language.html', {'LANGUAGES': settings.LANGUAGES,
+                                                 'SELECTEDLANG': request.LANGUAGE_CODE})
+
 def get_sums(spis):
     gena = []
     new_gena = []

@@ -1,4 +1,7 @@
 {% load staticfiles %}
+{% load i18n %}
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,10 +15,10 @@
             <a href="/" class="logo">lanksi</a>
             <ul class="menu">
             {% if request.user.is_authenticated %}
-                <li><a href="{% url "logout" %}">Выйти</a></li>
+                <li><a href="{% url "logout" %}">{% trans "Logout" %}</a></li>
             {% else %}
-                <li><a href="{% url "login" %}">Войти</a></li>
-                <li><a href="{% url "register" %}">Регистрация</a></li>
+                <li><a href="{% url "login" %}">{% trans "Login" %}</a></li>
+                <li><a href="{% url "register" %}">{% trans "Register" %}</a></li>
             {% endif %}
             </ul>
         </div>
@@ -23,6 +26,18 @@
             {% block content %}
             {% endblock %}
         </div>
+
+        <form action="/i18n/setlang/" method="post">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="/" />
+            <select name="language">
+                {% for lang in LANGUAGES %}
+                        <option value="{{ lang.0 }}" {% if lang.0 == SELECTEDLANG %}selected{% endif %}>{% if lang.1 == 'Spanish' %}Español{% else %}{{ lang.1 }}{% endif %}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Go" />
+        </form>
+
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     </body>
 </html>

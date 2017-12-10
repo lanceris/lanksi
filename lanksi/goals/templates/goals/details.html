@@ -1,17 +1,18 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 
-<h2>Goal: {{ goal.name }}</h2>
-<a href="{% url "goals:list_" %}">Go to goals list</a>
+<h2>{% trans "Goal" %}: {{ goal.name }}</h2>
+<a href="{% url "goals:list_" %}">{% trans "Go to goals list" %}</a>
 <br><br>
-<strong>Remained to save up: {{ goal.get_money_left }}</strong>
+<strong>{% trans "Remained to save up" %}: {{ goal.get_money_left }}</strong>
 
 <p>{{ goal.description }}<p>
 
 <ul>
-    <li><a href="{% url "goals:edit" goal.id %}">Edit goal</a></li>
-    <li><a href="{% url "goals:delete" goal.id %}">Delete goal</a></li>
+    <li><a href="{% url "goals:edit" goal.id %}">{% trans "Edit goal" %}</a></li>
+    <li><a href="{% url "goals:delete" goal.id %}">{% trans "Delete goal" %}</a></li>
 </ul>
 
 {% endblock %}

@@ -73,6 +73,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
+
             ],
         },
     },
@@ -114,11 +116,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 LANGUAGES = [
-    ('de', _('German')),
+    ('ru', _('Russian')),
     ('en', _('English')),
 ]
 
 LANGUAGE_CODE = 'en-us'
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -146,15 +152,15 @@ TR_MOVE = 3
 TR_EXCHANGE = 4
 
 TR_TYPES = (
-    (TR_ADD, 'Add'),
-    (TR_WITHDRAW, 'Withdraw'),
-    (TR_MOVE, 'Move'),
-    (TR_EXCHANGE, 'Exchange'),
+    (TR_ADD, _('Add')),
+    (TR_WITHDRAW, _('Withdraw')),
+    (TR_MOVE, _('Move')),
+    (TR_EXCHANGE, _('Exchange')),
 )
 CURRENCIES = (
-        ('RUB', 'Russian Rouble'),
-        ('USD', 'US Dollar'),
-        ('EUR', 'Euro')
+        ('RUB', _('Russian Rouble')),
+        ('USD', _('US Dollar')),
+        ('EUR', _('Euro'))
 )
 
 # CELERY STUFF

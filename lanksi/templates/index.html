@@ -1,20 +1,21 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-    Welcome
+    {% trans "Welcome" %}
 {% endblock %}
 
 {% block content %}
     {% if request.user.is_authenticated %}
-        <h2>Welcome, {{ request.user.username }}</h2>
+        <h2>{% trans "Welcome" %}, {{ request.user.username }}</h2>
         <ul>
-            <li><a href="{% url "accounts:list_" %}">Accounts</a></li>
-            <li><a href="{% url "categories:list_" %}">Categories</a></li>
-            <li><a href="{% url "goals:list_" %}">Goals</a></li>
-            <li><a href="{% url "patterns:list_" %}">Patterns</a></li>
-            <li><a href="#">Import & export credentials</a></li>
+            <li><a href="{% url "accounts:list_" %}">{% trans "Accounts" %}</a></li>
+            <li><a href="{% url "categories:list_" %}">{% trans "Categories" %}</a></li>
+            <li><a href="{% url "goals:list_" %}">{% trans "Goals" %}</a></li>
+            <li><a href="{% url "patterns:list_" %}">{% trans "Patterns" %}</a></li>
+            <li><a href="#">{% trans "Import & export credentials" %}</a></li>
             <li>
-                <p>Today's exchange rates:</p>
+                <p>{% trans "Exchange rates:" %}</p>
                 <ul>
                     {% for rate in rates %}
                         <li>
@@ -25,19 +26,19 @@
                     {% endfor %}
                 </ul>
                 <p>
-                    Last updated:
+                    <p>{% trans "Last updated:" %}</p>
                     <br>
                     {{ rates.0.date }}
                 </p>
             </li>
             <li>
-                <p>Summary table of account balances:</p>
+                <p>{% trans "Summary table of account balances:" %}</p>
                 {% for account in accounts %}
                     {{ account.label }}
                     <br>
                     {{ account.balance }} {{ account.currency }}
                 {% endfor %}
-                Total:
+                {% trans "Total:" %}
                 {% for sum in sums %}
                     {{ sum.value }} {{ sum.currency }}
                 {% endfor %}

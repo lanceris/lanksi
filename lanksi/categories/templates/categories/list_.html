@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% load staticfiles %}
+{% load i18n %}
 
 {% block title %}
-Hello
+{% trans "Hello" %}, {{ request.user }}
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "categories:add" %}">New category</a>
-    <p>Hello, {{ request.user }}</p>
+    <a href="{% url "categories:add" %}">{% trans "New category" %}</a>
+    <p>{% trans "Hello" %}, {{ request.user }}</p>
     {% for category in categories %}
         <ul>
             <li class="category">
@@ -15,8 +15,9 @@ Hello
                 <br>
                 {{ category.cat_type }}
                 <br>
-                Создана {{ category.created }}
-                Изменена {{ category.updated }}
+                {% trans "Created" %} {{ category.created }}
+                <br>
+                {% trans "Updated" %} {{ category.updated }}
             </li>
         </ul>
     {% endfor %}

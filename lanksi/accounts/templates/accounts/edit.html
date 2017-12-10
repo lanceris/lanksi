@@ -1,14 +1,15 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-Edit your account
+{% trans "Edit" %} {{ account.label }}
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "accounts:details" account.slug %}">Назад</a>
+    <a href="{% url "accounts:details" account.slug %}">{% trans "Go back" %}</a>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Save">
+        <input type="submit" value="{% trans "Save" %}">
     </form>
 {% endblock %}

@@ -6,24 +6,38 @@ from autoslug import AutoSlugField
 from taggit.managers import TaggableManager
 from categories.models import Category
 from django.utils.timezone import now
+from django.utils.translation import ugettext_lazy as _
 
 
 class BankAccount(models.Model):
-    label = models.CharField(max_length=255)
-    slug = AutoSlugField(populate_from='label', unique=True)
-    creation_date = models.DateField(auto_now_add=True, editable=False)
+    label = models.CharField(max_length=255,
+                             verbose_name=_('Name'))
+    slug = AutoSlugField(populate_from='label',
+                         unique=True,
+                         verbose_name=_('Slug'))
+    creation_date = models.DateField(auto_now_add=True,
+                                     editable=False,
+                                     verbose_name=_('Created'))
     currency = models.CharField(max_length=3,
                                 choices=settings.CURRENCIES,
-                                default='RUB')
+                                default='RUB',
+                                verbose_name=_('Currency'))
 
     balance = models.DecimalField(max_digits=12,
                                   decimal_places=2,
-                                  default=0)
-    owner = models.ForeignKey(User)
-    description = models.TextField(blank=True)
+                                  default=0,
+                                  verbose_name=_('Balance'))
+    owner = models.ForeignKey(User,
+                              verbose_name=_('Owner'))
+    description = models.TextField(blank=True,
+                                   verbose_name=_('Description'))
 
     def __str__(self):
         return self.label
+
+    class Meta:
+        verbose_name = _('Bank Account')
+        verbose_name_plural = _('Bank Accounts')
 
     @atomic
     def add_money(self, amount, tags, category, description):
@@ -91,21 +105,37 @@ class BankAccount(models.Model):
 
 
 class Transaction(models.Model):
-    tr_from = models.ForeignKey(BankAccount)
-    tr_to = models.ForeignKey(BankAccount, blank=True, null=True, related_name='tr_to')
-    comment = models.TextField(blank=True, null=True, max_length=255)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
+    tr_from = models.ForeignKey(BankAccount, verbose_name=_('From'))
+    tr_to = models.ForeignKey(BankAccount,
+                              blank=True,
+                              null=True,
+                              related_name='tr_to',
+                              verbose_name=_('To'))
+    comment = models.TextField(blank=True,
+                               null=True,
+                               max_length=255,
+                               verbose_name=_('Comment'))
+    created = models.DateTimeField(auto_now_add=True,
+                                   editable=False,
+                                   verbose_name=_('Created'))
     tr_amount = models.DecimalField(max_digits=12,
                                     decimal_places=2,
-                                    default=0)
-    tr_type = models.SmallIntegerField(choices=settings.TR_TYPES)
-    tr_tags = TaggableManager(blank=True)
-    category = models.ForeignKey(Category, blank=True, null=True)
-    balance = models.DecimalField(max_digits=12, decimal_places=2)
-    recipient_balance = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+                                    default=0,
+                                    verbose_name=_('Amount'))
+    tr_type = models.SmallIntegerField(choices=settings.TR_TYPES,
+                                       verbose_name=_('Type'))
+    tr_tags = TaggableManager(blank=True, verbose_name=_('Tags'))
+    category = models.ForeignKey(Category, blank=True, null=True, verbose_name=_('Category'))
+    balance = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Balance'))
+    recipient_balance = models.DecimalField(max_digits=12,
+                                            decimal_places=2,
+                                            blank=True,
+                                            null=True,
+                                            verbose_name=_('Recipient balance'))
     currency = models.CharField(max_length=3,
                                 choices=settings.CURRENCIES,
-                                default='RUB')
+                                default='RUB',
+                                verbose_name=_('Currency'))
 
     def __str__(self):
         try:
@@ -114,12 +144,20 @@ class Transaction(models.Model):
             msg = self.tr_from.label + " -> " + "None" + " at " + self.created.strftime('%d/%m/%Y %H:%M:%S')
         return msg
 
+    class Meta:
+        verbose_name = _('Transaction')
+        verbose_name_plural = _('Transactions')
+
 
 class ExchangeRate(models.Model):
-    base_currency = models.CharField(max_length=3)
-    other_currency = models.CharField(max_length=3)
-    value = models.DecimalField(max_digits=8, decimal_places=3)
-    date = models.DateField(editable=True, default=now)
+    base_currency = models.CharField(max_length=3, verbose_name=_('Base currency'))
+    other_currency = models.CharField(max_length=3, verbose_name=_('Other currency'))
+    value = models.DecimalField(max_digits=8, decimal_places=3, verbose_name=_('Value'))
+    date = models.DateField(editable=True, default=now, verbose_name=_('Date'))
 
     def __str__(self):
         return self.base_currency+"/"+self.other_currency
+
+    class Meta:
+        verbose_name = _('Exchange Rate')
+        verbose_name_plural = _('Exchange Rates')

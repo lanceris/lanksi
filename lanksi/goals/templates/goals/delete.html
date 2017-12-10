@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-Delete {{ goal.name }}?
+{% trans "Delete" %} {{ goal.name }}?
 {% endblock %}
 
 {% block content %}
-    <h1>Delete {{ goal.name }}?</h1>
-    <a href="{% url "goals:confirm_delete" goal.id %}">Yes</a>
-    <a href="{% url "goals:details" goal.id %}">No, go back</a>
+    <h1>{% trans "Delete" %} {{ goal.name }}?</h1>
+    <a href="{% url "goals:confirm_delete" goal.id %}">{% trans "Yes" %}</a>
+    <a href="{% url "goals:details" goal.id %}">{% trans "No, go back" %}</a>
 {% endblock %}

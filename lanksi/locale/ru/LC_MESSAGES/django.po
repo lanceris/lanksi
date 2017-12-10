@@ -1,0 +1,449 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-11 01:15+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: accounts/models.py:14 categories/models.py:10 goals/models.py:10
+#: patterns/models.py:9
+msgid "Name"
+msgstr "Название"
+
+#: accounts/models.py:17 categories/models.py:11
+msgid "Slug"
+msgstr "Slug"
+
+#: accounts/models.py:20 accounts/models.py:120
+#: accounts/templates/accounts/list_.html:19 categories/models.py:13
+#: categories/templates/categories/list_.html:18 goals/models.py:26
+#: goals/templates/goals/list_.html:21 patterns/models.py:12
+msgid "Created"
+msgstr "Создано"
+
+#: accounts/models.py:24 accounts/models.py:138 goals/models.py:21
+msgid "Currency"
+msgstr "Валюта"
+
+#: accounts/models.py:29 accounts/models.py:129
+#: accounts/templates/accounts/details.html:9
+msgid "Balance"
+msgstr "Баланс"
+
+#: accounts/models.py:31 categories/models.py:12 goals/models.py:9
+#: patterns/models.py:8
+msgid "Owner"
+msgstr "Владелец"
+
+#: accounts/models.py:33 goals/models.py:25 patterns/models.py:11
+msgid "Description"
+msgstr "Описание"
+
+#: accounts/models.py:39
+msgid "Bank Account"
+msgstr "Счёт"
+
+#: accounts/models.py:40
+msgid "Bank Accounts"
+msgstr "Счета"
+
+#: accounts/models.py:108
+msgid "From"
+msgstr "От кого"
+
+#: accounts/models.py:113
+msgid "To"
+msgstr "Кому"
+
+#: accounts/models.py:117
+msgid "Comment"
+msgstr "Комментарий"
+
+#: accounts/models.py:124
+#, fuzzy
+#| msgid "Account"
+msgid "Amount"
+msgstr "Сумма"
+
+#: accounts/models.py:126 categories/models.py:9
+msgid "Type"
+msgstr "Тип"
+
+#: accounts/models.py:127
+msgid "Tags"
+msgstr "Теги"
+
+#: accounts/models.py:128 categories/models.py:20
+#: categories/templates/categories/details.html:6
+msgid "Category"
+msgstr "Категория"
+
+#: accounts/models.py:134
+msgid "Recipient balance"
+msgstr "Баланс получателя"
+
+#: accounts/models.py:148 patterns/models.py:10
+msgid "Transaction"
+msgstr "Транзакция"
+
+#: accounts/models.py:149
+msgid "Transactions"
+msgstr "Транзакции"
+
+#: accounts/models.py:153
+msgid "Base currency"
+msgstr "Базовая валюта"
+
+#: accounts/models.py:154
+msgid "Other currency"
+msgstr "Другая валюта"
+
+#: accounts/models.py:155
+msgid "Value"
+msgstr "Значение"
+
+#: accounts/models.py:156
+msgid "Date"
+msgstr "Дата"
+
+#: accounts/models.py:162
+msgid "Exchange Rate"
+msgstr "Курс валюты"
+
+#: accounts/models.py:163
+msgid "Exchange Rates"
+msgstr "Курсы валют"
+
+#: accounts/templates/accounts/add.html:6
+msgid "Add Account"
+msgstr "Создать счёт"
+
+#: accounts/templates/accounts/add.html:11
+#: accounts/templates/accounts/edit.html:13
+#: accounts/templates/accounts/money_transfer.html:11
+#: categories/templates/categories/add.html:16
+#: categories/templates/categories/edit.html:15
+#: goals/templates/goals/add.html:11 goals/templates/goals/add_money.html:15
+#: goals/templates/goals/edit.html:13 patterns/templates/patterns/add.html:15
+#: patterns/templates/patterns/edit.html:13
+msgid "Save"
+msgstr "Сохранить"
+
+#: accounts/templates/accounts/delete.html:5
+#: categories/templates/categories/delete.html:5
+#: categories/templates/categories/delete.html:9
+#: categories/templates/categories/details.html:15
+#: goals/templates/goals/delete.html:5 goals/templates/goals/delete.html:9
+#: patterns/templates/patterns/delete.html:5
+#: patterns/templates/patterns/delete.html:9
+#: patterns/templates/patterns/list_.html:22
+msgid "Delete"
+msgstr "Удалить"
+
+#: accounts/templates/accounts/delete.html:10
+#: categories/templates/categories/delete.html:10
+#: goals/templates/goals/delete.html:10
+#: patterns/templates/patterns/delete.html:10
+msgid "Yes"
+msgstr "Да"
+
+#: accounts/templates/accounts/delete.html:11
+#: categories/templates/categories/delete.html:11
+#: goals/templates/goals/delete.html:11
+#: patterns/templates/patterns/delete.html:11
+msgid "No, go back"
+msgstr "Нет, вернуться"
+
+#: accounts/templates/accounts/details.html:6
+msgid "Account"
+msgstr "Счёт"
+
+#: accounts/templates/accounts/details.html:7
+msgid "Back to accounts list"
+msgstr "К списку счетов"
+
+#: accounts/templates/accounts/details.html:14
+msgid "Edit account"
+msgstr "Редактировать счёт"
+
+#: accounts/templates/accounts/details.html:15
+msgid "Delete account"
+msgstr "Удалить счёт"
+
+#: accounts/templates/accounts/details.html:16
+#: goals/templates/goals/list_.html:19
+msgid "Add money"
+msgstr "Внести доход"
+
+#: accounts/templates/accounts/details.html:17
+msgid "Withdraw money"
+msgstr "Внести расход"
+
+#: accounts/templates/accounts/details.html:18
+msgid "Transfer money"
+msgstr "Перевести деньги"
+
+#: accounts/templates/accounts/details.html:19
+msgid "Exchange money"
+msgstr "Обменять деньги"
+
+#: accounts/templates/accounts/edit.html:5
+#: categories/templates/categories/details.html:14
+#: categories/templates/categories/edit.html:4
+#: categories/templates/categories/edit.html:9
+#: goals/templates/goals/edit.html:5 patterns/templates/patterns/edit.html:5
+#: patterns/templates/patterns/list_.html:20
+msgid "Edit"
+msgstr "Изменить"
+
+#: accounts/templates/accounts/edit.html:9
+#: categories/templates/categories/add.html:12
+#: categories/templates/categories/edit.html:11
+#: goals/templates/goals/edit.html:9 patterns/templates/patterns/edit.html:9
+msgid "Go back"
+msgstr "Назад"
+
+#: accounts/templates/accounts/list_.html:6
+#: accounts/templates/accounts/list_.html:11
+#: categories/templates/categories/list_.html:5
+#: categories/templates/categories/list_.html:10
+#: goals/templates/goals/list_.html:5 patterns/templates/patterns/list_.html:5
+#: patterns/templates/patterns/list_.html:10
+msgid "Hello"
+msgstr "Здравствуйте"
+
+#: accounts/templates/accounts/list_.html:10
+msgid "Create new account"
+msgstr "Создать счёт"
+
+#: accounts/templates/accounts/list_.html:24
+msgid "History"
+msgstr "История"
+
+#: accounts/templates/accounts/list_.html:26
+msgid "Filter"
+msgstr "Фильтр"
+
+#: accounts/templates/accounts/list_.html:30
+msgid "Apply"
+msgstr "Применить"
+
+#: accounts/templates/accounts/list_.html:87
+msgid "Save as template"
+msgstr "Сохранить как шаблон"
+
+#: categories/models.py:14 categories/templates/categories/list_.html:20
+#: goals/models.py:27 goals/templates/goals/list_.html:23 patterns/models.py:13
+msgid "Updated"
+msgstr "Обновлено"
+
+#: categories/models.py:21 templates/index.html:13
+msgid "Categories"
+msgstr "Категории"
+
+#: categories/templates/categories/add.html:5
+#: categories/templates/categories/add.html:10
+msgid "Add category"
+msgstr "Добавить категорию"
+
+#: categories/templates/categories/details.html:7
+msgid "To categories list"
+msgstr "К списку категорий"
+
+#: categories/templates/categories/details.html:10
+msgid "Category type"
+msgstr "Тип категории"
+
+#: categories/templates/categories/list_.html:9
+msgid "New category"
+msgstr "Создать категорию"
+
+#: goals/models.py:13
+#, fuzzy
+#| msgid "Total:"
+msgid "Total"
+msgstr "Итого:"
+
+#: goals/models.py:17
+#, fuzzy
+#| msgid "Save"
+msgid "Saved"
+msgstr "Сохранить"
+
+#: goals/models.py:30 goals/templates/goals/details.html:6
+msgid "Goal"
+msgstr "Цель"
+
+#: goals/models.py:31 templates/index.html:14
+msgid "Goals"
+msgstr "Цели"
+
+#: goals/templates/goals/add.html:6
+msgid "Add Goal"
+msgstr "Создать цель"
+
+#: goals/templates/goals/add_money.html:5
+#: goals/templates/goals/add_money.html:10
+msgid "Add money to"
+msgstr "Внести доход в"
+
+#: goals/templates/goals/details.html:7
+msgid "Go to goals list"
+msgstr "К списку целей"
+
+#: goals/templates/goals/details.html:9 goals/templates/goals/list_.html:18
+msgid "Remained to save up"
+msgstr "Осталось накопить"
+
+#: goals/templates/goals/details.html:14
+msgid "Edit goal"
+msgstr "Изменить цель"
+
+#: goals/templates/goals/details.html:15
+msgid "Delete goal"
+msgstr "Удалить цель"
+
+#: goals/templates/goals/list_.html:9
+msgid "New Goal"
+msgstr "Создать цель"
+
+#: goals/templates/goals/list_.html:16
+msgid "Saved up so far"
+msgstr "Накоплено"
+
+#: lanksi/settings.py:119
+msgid "Russian"
+msgstr "Русский"
+
+#: lanksi/settings.py:120
+msgid "English"
+msgstr "Английский"
+
+#: lanksi/settings.py:155
+msgid "Add"
+msgstr "Доход"
+
+#: lanksi/settings.py:156
+msgid "Withdraw"
+msgstr "Расход"
+
+#: lanksi/settings.py:157
+msgid "Move"
+msgstr "Перемещение"
+
+#: lanksi/settings.py:158
+msgid "Exchange"
+msgstr "Обмен"
+
+#: lanksi/settings.py:161
+msgid "Russian Rouble"
+msgstr "Рубль"
+
+#: lanksi/settings.py:162
+msgid "US Dollar"
+msgstr "Доллар США"
+
+#: lanksi/settings.py:163
+msgid "Euro"
+msgstr "Евро"
+
+#: patterns/models.py:16
+msgid "Transaction Template"
+msgstr "Шаблон"
+
+#: patterns/models.py:17
+msgid "Transaction Templates"
+msgstr "Шаблоны"
+
+#: patterns/templates/patterns/add.html:5
+#: patterns/templates/patterns/add.html:10
+msgid "Add template"
+msgstr "Создать шаблон"
+
+#: patterns/templates/patterns/list_.html:9
+msgid "New pattern"
+msgstr "Новый шаблон"
+
+#: templates/base.html:17
+msgid "Logout"
+msgstr "Выйти"
+
+#: templates/base.html:19 templates/registration/login.html:4
+#: templates/registration/login.html:7 templates/registration/login.html:19
+msgid "Login"
+msgstr "Войти"
+
+#: templates/base.html:20
+msgid "Register"
+msgstr "Регистрация"
+
+#: templates/index.html:5 templates/index.html:10
+msgid "Welcome"
+msgstr "Добро пожаловать"
+
+#: templates/index.html:12
+msgid "Accounts"
+msgstr "Счета"
+
+#: templates/index.html:15
+msgid "Patterns"
+msgstr "Шаблоны"
+
+#: templates/index.html:16
+msgid "Import & export credentials"
+msgstr "Импорт и экспорт данных"
+
+#: templates/index.html:18
+msgid "Exchange rates:"
+msgstr "Курсы валют:"
+
+#: templates/index.html:29
+msgid "Last updated:"
+msgstr "Обновлено:"
+
+#: templates/index.html:35
+msgid "Summary table of account balances:"
+msgstr "Остаток на счетах:"
+
+#: templates/index.html:41
+msgid "Total:"
+msgstr "Итого:"
+
+#: templates/manage_credentials.html:5 templates/manage_credentials.html:9
+msgid "Import & Export"
+msgstr "Импорт и эскпорт"
+
+#: templates/manage_credentials.html:10
+msgid "Import & Export your accounts data, goals, categories etc"
+msgstr "Импорт и экспорт данных ваших учетных записей, целей, категорий и т. Д."
+
+#: templates/registration/login.html:10
+msgid "Your username and password didn't match. Please try again."
+msgstr "Ваше имя пользователя и пароль не совпадают. Пожалуйста, попробуйте еще раз."
+
+#: templates/registration/login.html:12
+msgid "Please, use the following form to log-in:"
+msgstr "Пожалуйста, используйте следующую форму для входа:"
+
+#: templates/registration/register.html:5
+#: templates/registration/register.html:9
+msgid "Sign up"
+msgstr "Регистрация"
+
+#~ msgid "Remained to save uo"
+#~ msgstr "Осталость накопить"

@@ -2,20 +2,33 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 from categories.models import Category
+from django.utils.translation import ugettext_lazy as _
 
 
 class Goal(models.Model):
-    owner = models.ForeignKey(User)
-    name = models.CharField(max_length=255)
+    owner = models.ForeignKey(User, verbose_name=_('Owner'))
+    name = models.CharField(max_length=255, verbose_name=_('Name'))
     money_total = models.DecimalField(max_digits=26,
-                                      decimal_places=2)
-    money_saved = models.DecimalField(max_digits=26, decimal_places=2, default=0)
+                                      decimal_places=2,
+                                      verbose_name=_('Total'))
+    money_saved = models.DecimalField(max_digits=26,
+                                      decimal_places=2,
+                                      default=0,
+                                      verbose_name=_('Saved'))
     currency = models.CharField(max_length=3,
                                 choices=settings.CURRENCIES,
-                                default='RUB')
-    description = models.TextField(blank=True, null=True, max_length=255)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+                                default='RUB',
+                                verbose_name=_('Currency'))
+    description = models.TextField(blank=True,
+                                   null=True,
+                                   max_length=255,
+                                   verbose_name=_('Description'))
+    created = models.DateTimeField(auto_now_add=True, verbose_name=_('Created'))
+    updated = models.DateTimeField(auto_now=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Goal')
+        verbose_name_plural = _('Goals')
 
     def get_money_left(self):
         return self.money_total - self.money_saved

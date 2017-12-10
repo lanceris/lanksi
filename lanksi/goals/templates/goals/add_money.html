@@ -1,16 +1,17 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-Add money to {{ goal.name }}
+{% trans "Add money to" %} {{ goal.name }}
 {% endblock %}
 
 {% block content %}
     <h2>
-        Add money to {{ goal.name }}
+        {% trans "Add money to" %} {{ goal.name }}
     </h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Save">
+        <input type="submit" value="{% trans "Save" %}">
     </form>
 {% endblock %}
