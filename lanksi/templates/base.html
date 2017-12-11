@@ -28,9 +28,13 @@
         </div>
 
         {% ifequal LANGUAGE_CODE "en"  %}
-            <a href="/ru{{ request.get_full_path|slice:'3:' }}">Russian</a>
+            <a href="/ru{{ request.get_full_path|slice:'3:' }}">
+                <img src="{% static 'accounts/img/russian.gif' %}">
+            </a>
         {% else %}
-            <a href="/en{{ request.get_full_path|slice:'3:' }}">English</a>
+            <a href="/en{{ request.get_full_path|slice:'3:' }}">
+                <img src="{% static 'accounts/img/english.gif' %}">
+            </a>
         {% endifequal %}
 
 
