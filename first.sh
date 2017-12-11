@@ -12,13 +12,12 @@ fi
 source ~/.bashrc
 
 mkvirtualenv -p python3.6 lanksi
+workon lanksi
 pip install -r requirements.txt
 cd lanksi
 python manage.py migrate
 python manage.py loaddata initial_db.json
-cd ..
-gnome-terminal -x sh -c ". ./second.sh; bash"
+gnome-terminal -x sh -c "cd ..;. ./second.sh; bash"
 sleep 1
 celery worker -l info -A lanksi --beat
-
 

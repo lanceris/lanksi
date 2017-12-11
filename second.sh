@@ -1,4 +1,2 @@
-cd ..
-workon lanksi
-
+cd lanksi
 python manage.py runserver
