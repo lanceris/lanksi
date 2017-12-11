@@ -8,41 +8,6 @@
 {% block content %}
     {% if request.user.is_authenticated %}
         <h2>{% trans "Welcome" %}, {{ request.user.username }}</h2>
-        <ul>
-            <li><a href="{% url "accounts:list_" %}">{% trans "Accounts" %}</a></li>
-            <li><a href="{% url "categories:list_" %}">{% trans "Categories" %}</a></li>
-            <li><a href="{% url "goals:list_" %}">{% trans "Goals" %}</a></li>
-            <li><a href="{% url "patterns:list_" %}">{% trans "Patterns" %}</a></li>
-            <li><a href="#">{% trans "Import & export credentials" %}</a></li>
-            <li>
-                <p>{% trans "Exchange rates:" %}</p>
-                <ul>
-                    {% for rate in rates %}
-                        <li>
-                            {{ rate }}
-                            <br>
-                            {{ rate.value }}
-                        </li>
-                    {% endfor %}
-                </ul>
-                <p>
-                    <p>{% trans "Last updated:" %}</p>
-                    <br>
-                    {{ rates.0.date }}
-                </p>
-            </li>
-            <li>
-                <p>{% trans "Summary table of account balances:" %}</p>
-                {% for account in accounts %}
-                    {{ account.label }}
-                    <br>
-                    {{ account.balance }} {{ account.currency }}
-                {% endfor %}
-                {% trans "Total:" %}
-                {% for sum in sums %}
-                    {{ sum.value }} {{ sum.currency }}
-                {% endfor %}
-            </li>
-        </ul>
+
     {% endif %}
 {% endblock %}

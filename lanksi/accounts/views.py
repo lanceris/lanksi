@@ -33,7 +33,7 @@ def get_sums(spis):
 
 class IndexView(TemplateView):
 
-    template_name = 'index.html'
+    template_name = 'base.html'
 
     def get_context_data(self, **kwargs):
         rates = ExchangeRate.objects.all()
