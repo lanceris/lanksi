@@ -8,17 +8,68 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-11 01:15+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2017-12-11 11:22+0300\n"
+"PO-Revision-Date: 2017-12-11 12:17+0230\n"
+"Last-Translator: b'  <>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Translated-Using: django-rosetta 0.7.14\n"
+
+#: accounts/forms.py:45 accounts/forms.py:68 accounts/forms.py:89
+#: accounts/models.py:124 goals/forms.py:31
+#| msgid "Account"
+msgid "Amount"
+msgstr "Сумма"
+
+#: accounts/forms.py:106
+msgid "Day"
+msgstr "День"
+
+#: accounts/forms.py:107
+msgid "Week"
+msgstr "Неделя"
+
+#: accounts/forms.py:108
+msgid "Month"
+msgstr "Месяц"
+
+#: accounts/forms.py:109
+msgid "Year"
+msgstr "Год"
+
+#: accounts/forms.py:114
+msgid "Time period"
+msgstr "Период времени"
+
+#: accounts/forms.py:117 accounts/models.py:108
+msgid "From"
+msgstr "От кого"
+
+#: accounts/forms.py:120 accounts/models.py:113
+msgid "To"
+msgstr "Кому"
+
+#: accounts/forms.py:122
+msgid "Keywords"
+msgstr "Ключевые слова"
+
+#: accounts/mixins.py:8 accounts/models.py:33 goals/models.py:25
+#: patterns/models.py:11
+msgid "Description"
+msgstr "Описание"
+
+#: accounts/mixins.py:14 accounts/models.py:128 categories/models.py:20
+#: categories/templates/categories/details.html:6
+msgid "Category"
+msgstr "Категория"
+
+#: accounts/mixins.py:19 accounts/templates/accounts/details.html:6
+msgid "Account"
+msgstr "Счёт"
 
 #: accounts/models.py:14 categories/models.py:10 goals/models.py:10
 #: patterns/models.py:9
@@ -50,10 +101,6 @@ msgstr "Баланс"
 msgid "Owner"
 msgstr "Владелец"
 
-#: accounts/models.py:33 goals/models.py:25 patterns/models.py:11
-msgid "Description"
-msgstr "Описание"
-
 #: accounts/models.py:39
 msgid "Bank Account"
 msgstr "Счёт"
@@ -62,23 +109,9 @@ msgstr "Счёт"
 msgid "Bank Accounts"
 msgstr "Счета"
 
-#: accounts/models.py:108
-msgid "From"
-msgstr "От кого"
-
-#: accounts/models.py:113
-msgid "To"
-msgstr "Кому"
-
 #: accounts/models.py:117
 msgid "Comment"
 msgstr "Комментарий"
-
-#: accounts/models.py:124
-#, fuzzy
-#| msgid "Account"
-msgid "Amount"
-msgstr "Сумма"
 
 #: accounts/models.py:126 categories/models.py:9
 msgid "Type"
@@ -87,11 +120,6 @@ msgstr "Тип"
 #: accounts/models.py:127
 msgid "Tags"
 msgstr "Теги"
-
-#: accounts/models.py:128 categories/models.py:20
-#: categories/templates/categories/details.html:6
-msgid "Category"
-msgstr "Категория"
 
 #: accounts/models.py:134
 msgid "Recipient balance"
@@ -169,10 +197,6 @@ msgstr "Да"
 msgid "No, go back"
 msgstr "Нет, вернуться"
 
-#: accounts/templates/accounts/details.html:6
-msgid "Account"
-msgstr "Счёт"
-
 #: accounts/templates/accounts/details.html:7
 msgid "Back to accounts list"
 msgstr "К списку счетов"
@@ -248,7 +272,8 @@ msgid "Save as template"
 msgstr "Сохранить как шаблон"
 
 #: categories/models.py:14 categories/templates/categories/list_.html:20
-#: goals/models.py:27 goals/templates/goals/list_.html:23 patterns/models.py:13
+#: goals/models.py:27 goals/templates/goals/list_.html:23
+#: patterns/models.py:13
 msgid "Updated"
 msgstr "Обновлено"
 
@@ -273,17 +298,20 @@ msgstr "Тип категории"
 msgid "New category"
 msgstr "Создать категорию"
 
+#: goals/forms.py:27
+#| msgid "Transfer money"
+msgid "Take money from"
+msgstr "Взять деньги из"
+
 #: goals/models.py:13
-#, fuzzy
 #| msgid "Total:"
 msgid "Total"
-msgstr "Итого:"
+msgstr "Итого"
 
 #: goals/models.py:17
-#, fuzzy
 #| msgid "Save"
 msgid "Saved"
-msgstr "Сохранить"
+msgstr "Накоплено"
 
 #: goals/models.py:30 goals/templates/goals/details.html:6
 msgid "Goal"
@@ -379,16 +407,16 @@ msgstr "Создать шаблон"
 msgid "New pattern"
 msgstr "Новый шаблон"
 
-#: templates/base.html:17
+#: templates/base.html:18
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:19 templates/registration/login.html:4
+#: templates/base.html:20 templates/registration/login.html:4
 #: templates/registration/login.html:7 templates/registration/login.html:19
 msgid "Login"
 msgstr "Войти"
 
-#: templates/base.html:20
+#: templates/base.html:21
 msgid "Register"
 msgstr "Регистрация"
 
@@ -430,11 +458,13 @@ msgstr "Импорт и эскпорт"
 
 #: templates/manage_credentials.html:10
 msgid "Import & Export your accounts data, goals, categories etc"
-msgstr "Импорт и экспорт данных ваших учетных записей, целей, категорий и т. Д."
+msgstr ""
+"Импорт и экспорт данных ваших учетных записей, целей, категорий и т. Д."
 
 #: templates/registration/login.html:10
 msgid "Your username and password didn't match. Please try again."
-msgstr "Ваше имя пользователя и пароль не совпадают. Пожалуйста, попробуйте еще раз."
+msgstr ""
+"Ваше имя пользователя и пароль не совпадают. Пожалуйста, попробуйте еще раз."
 
 #: templates/registration/login.html:12
 msgid "Please, use the following form to log-in:"

@@ -27,16 +27,12 @@
             {% endblock %}
         </div>
 
-        <form action="/i18n/setlang/" method="post">
-            {% csrf_token %}
-            <input name="next" type="hidden" value="/" />
-            <select name="language">
-                {% for lang in LANGUAGES %}
-                        <option value="{{ lang.0 }}" {% if lang.0 == SELECTEDLANG %}selected{% endif %}>{% if lang.1 == 'Spanish' %}Español{% else %}{{ lang.1 }}{% endif %}</option>
-                {% endfor %}
-            </select>
-            <input type="submit" value="Go" />
-        </form>
+        {% ifequal LANGUAGE_CODE "en"  %}
+            <a href="/ru{{ request.get_full_path|slice:'3:' }}">Russian</a>
+        {% else %}
+            <a href="/en{{ request.get_full_path|slice:'3:' }}">English</a>
+        {% endifequal %}
+
 
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     </body>

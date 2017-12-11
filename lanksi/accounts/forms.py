@@ -1,12 +1,16 @@
-from django import forms
-from accounts.models import BankAccount, Transaction
-from categories.models import Category
-from django.utils.timezone import datetime
-from dateutil.relativedelta import relativedelta
 from decimal import Decimal
 
+from django import forms
+from django.utils.timezone import datetime
+from django.utils.translation import ugettext_lazy as _
+from dateutil.relativedelta import relativedelta
 
-class AddBankAccountForm(forms.ModelForm):
+from accounts.models import BankAccount, Transaction
+from categories.models import Category
+from accounts.mixins import CategoryMixin, DescriptionMixin, AccountMixin
+
+
+class AddBankAccountForm(DescriptionMixin, forms.ModelForm):
     class Meta:
         model = BankAccount
         exclude = ('owner',)
@@ -14,7 +18,7 @@ class AddBankAccountForm(forms.ModelForm):
     balance = forms.CharField(max_length=15, initial=Decimal("0"))
 
 
-class EditBankAccountForm(forms.ModelForm):
+class EditBankAccountForm(DescriptionMixin, forms.ModelForm):
     label = forms.CharField()
 
     class Meta:
@@ -22,7 +26,7 @@ class EditBankAccountForm(forms.ModelForm):
         exclude = ('owner', 'balance', 'currency')
 
 
-class TransactionForm(forms.ModelForm):
+class TransactionForm(DescriptionMixin, CategoryMixin, forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
@@ -35,12 +39,13 @@ class TransactionForm(forms.ModelForm):
         model = Transaction
         fields = ('amount', 'category', 'tr_tags', 'description')
 
-    amount = forms.DecimalField(max_digits=12, decimal_places=2, min_value=0)
-    category = forms.ModelChoiceField(queryset=None, required=False)
-    description = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 50}), required=False)
+    amount = forms.DecimalField(max_digits=12,
+                                decimal_places=2,
+                                min_value=0,
+                                label=_("Amount"))
 
 
-class MoveMoneyForm(forms.ModelForm):
+class MoveMoneyForm(AccountMixin, DescriptionMixin, CategoryMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
         self.acc = kwargs.pop('account')
@@ -57,13 +62,13 @@ class MoveMoneyForm(forms.ModelForm):
         model = Transaction
         fields = ('account', 'amount', 'category', 'tr_tags', 'description')
 
-    account = forms.ModelChoiceField(queryset=None)
-    amount = forms.DecimalField(max_digits=12, decimal_places=2, min_value=0)
-    category = forms.ModelChoiceField(queryset=None, required=False)
-    description = forms.CharField(widget=forms.Textarea(), required=False)
+    amount = forms.DecimalField(max_digits=12,
+                                decimal_places=2,
+                                min_value=0,
+                                label=_("Amount"))
 
 
-class ExchangeForm(forms.ModelForm):
+class ExchangeForm(AccountMixin, DescriptionMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
         self.acc = kwargs.pop('account')
@@ -78,13 +83,13 @@ class ExchangeForm(forms.ModelForm):
         model = Transaction
         fields = ('account', 'amount', 'category', 'tr_tags', 'description')
 
-    account = forms.ModelChoiceField(queryset=None)
-    amount = forms.DecimalField(max_digits=12, decimal_places=2, min_value=0)
-    category = forms.ModelChoiceField(queryset=None, required=False)
-    description = forms.CharField(widget=forms.Textarea(), required=False)
+    amount = forms.DecimalField(max_digits=12,
+                                decimal_places=2,
+                                min_value=0,
+                                label=_("Amount"))
 
 
-class FilterHistoryForm(forms.Form):
+class FilterHistoryForm(AccountMixin, CategoryMixin, forms.Form):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
         super(FilterHistoryForm, self).__init__(*args, **kwargs)
@@ -98,18 +103,24 @@ class FilterHistoryForm(forms.Form):
     year = datetime.today() - relativedelta(years=1)
     time_periods = (
         (None, ' '),
-        (day, 'day'),
-        (week, 'week'),
-        (month, 'month'),
-        (year, 'year'),
+        (day, _('Day')),
+        (week, _('Week')),
+        (month, _('Month')),
+        (year, _('Year')),
     )
     time_period = forms.ChoiceField(choices=time_periods,
                                     initial=time_periods[0],
-                                    required=False)
-    date_from = forms.DateField(widget=forms.SelectDateWidget(years=years), required=False)
-    date_to = forms.DateField(widget=forms.SelectDateWidget(years=years), required=False)
-    keywords = forms.CharField(required=False)
-    account = forms.ModelChoiceField(queryset=None, required=False)
-    category = forms.ModelChoiceField(queryset=None, required=False)
+                                    required=False,
+                                    label=_("Time period"))
+    date_from = forms.DateField(widget=forms.SelectDateWidget(years=years),
+                                required=False,
+                                label=_("From"))
+    date_to = forms.DateField(widget=forms.SelectDateWidget(years=years),
+                              required=False,
+                              label=_("To"))
+    keywords = forms.CharField(required=False,
+                               label=_("Keywords"))
+    account = forms.ModelChoiceField(queryset=None,
+                                     required=False)
 
 
