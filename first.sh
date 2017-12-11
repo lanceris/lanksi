@@ -17,7 +17,7 @@ pip install -r requirements.txt
 cd lanksi
 python manage.py migrate
 python manage.py loaddata initial_db.json
-gnome-terminal -x sh -c "cd ..;. ./second.sh; bash"
+x-terminal-emulator -x sh -c "cd ..;. ./second.sh; bash"
 sleep 1
 celery worker -l info -A lanksi --beat
 
