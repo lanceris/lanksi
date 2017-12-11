@@ -1,6 +1,5 @@
 db.sqlite3
 .idea/
-secret.py
 __pycache__/
 media/
 config.txt
