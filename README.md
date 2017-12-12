@@ -6,4 +6,7 @@ Personal finance application made with django(study project)
 git clone https://github.com/lanceris/lanksi.git
 cd lanksi
 . ./first.sh
+
+./manage.py createsuperuser
+./manage.py runserver
 ```
