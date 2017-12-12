@@ -14,50 +14,62 @@
     <body>
         <div id="header">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-              <a class="navbar-brand" href="/">Lanksi</a>
-              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
+                <a class="navbar-brand" href="/">Lanksi</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                  <li class="nav-item active">
-                    <a class="nav-link" href="{% url "accounts:list_" %}">{% trans "Accounts" %} <span class="sr-only">(current)</span></a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url "categories:list_" %}">{% trans "Categories" %}</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url "goals:list_" %}">{% trans "Goals" %}</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url "patterns:list_" %}">{% trans "Patterns" %}</a>
-                  </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          {% trans "Import & export credentials" %}
-                        </a>
-                      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </div>
-                    </li>
-                    {% if request.user.is_authenticated %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url "logout" %}">{% trans "Logout" %}</a>
-                      </li>
-                    {% else %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url "login" %}">{% trans "Login" %}</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url "register" %}">{% trans "Register" %}</a>
-                      </li>
-                    {% endif %}
-                </ul>
-              </div>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{% url "accounts:list_" %}">{% trans "Accounts" %} <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "categories:list_" %}">{% trans "Categories" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "goals:list_" %}">{% trans "Goals" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "patterns:list_" %}">{% trans "Patterns" %}</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {% trans "Import & export credentials" %}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>
+                        <li class="navbar-item">
+                            {% ifequal LANGUAGE_CODE "en"  %}
+                            <a href="/ru{{ request.get_full_path|slice:'3:' }}">
+                                <img src="{% static 'accounts/img/russian.gif' %}">
+                            </a>
+                            {% else %}
+                                <a href="/en{{ request.get_full_path|slice:'3:' }}">
+                                    <img src="{% static 'accounts/img/english.gif' %}">
+                                </a>
+                            {% endifequal %}
+                        </li>
+
+                        {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "logout" %}">{% trans "Logout" %}</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "login" %}">{% trans "Login" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "register" %}">{% trans "Register" %}</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </nav>
         </div>
         <div class="container">
@@ -67,56 +79,53 @@
               {% endblock %}
             </div>
             <div class="col-sm-3">
-              {% block content-right %}
-                  <div class="exchange-rates border border-dark">
-        <p class="text-center">{% trans "Exchange rates:" %}</p>
-            <ul class="rates list-group">
-                {% for rate in rates %}
-                    <li class="rate list-group-item">
+                {% block content-right %}
+                    <div class="exchange-rates border border-dark">
+                        <p class="text-center">{% trans "Exchange rates:" %}</p>
+                        <ul class="rates list-group">
+                            {% for rate in rates %}
+                                <li class="rate list-group-item">
+                                    <p class="text-center">
+                                        {{ rate }}
+                                        <br>
+                                        {{ rate.value }}
+                                    </p>
+                                </li>
+                            {% endfor %}
+                        </ul>
                         <p class="text-center">
-                            {{ rate }}<br>
-                            {{ rate.value }}
+                            {% trans "Last updated:" %}
+                            <br>
+                            {{ rates.0.date }}
                         </p>
-                    </li>
-                {% endfor %}
-            </ul>
-        <p>
-            <p class="text-center">{% trans "Last updated:" %}
-            <br>
-            {{ rates.0.date }}</p>
-        </p>
-    </div>
+                    </div>
                     <hr>
-                  <div class="summary">
-                      <p class="text-center">{% trans "Summary table of account balances:" %}</p>
-                      {% for account in accounts %}
-                          {{ account.label }}
-                          <br>
-                          {{ account.balance }} {{ account.currency }}
-                      {% endfor %}
-                      {% trans "Total:" %}
-                      {% for sum in sums %}
-                          {{ sum.value }} {{ sum.currency }}
-                      {% endfor %}
-                </div>
-              {% endblock %}
-            </div>
-          </div>
-        </div>
+                    <div class="summary">
+                        <p class="text-center">{% trans "Summary table of account balances:" %}</p>
+                        {% for account in accounts %}
+                            <div class="account">
+                                {{ account.label }}
+                                <br>
+                                {{ account.balance }} {{ account.currency }}
+                            </div>
+                        {% endfor %}
 
-        {% ifequal LANGUAGE_CODE "en"  %}
-            <a href="/ru{{ request.get_full_path|slice:'3:' }}">
-                <img src="{% static 'accounts/img/russian.gif' %}">
-            </a>
-        {% else %}
-            <a href="/en{{ request.get_full_path|slice:'3:' }}">
-                <img src="{% static 'accounts/img/english.gif' %}">
-            </a>
-        {% endifequal %}
+                        {% trans "Total:" %}
+                        {% for sum in sums %}
+                            {{ sum.value }} {{ sum.currency }}
+                        {% endfor %}
+                    </div>
+                {% endblock %}
+                </div>
+            </div>
+        </div>
 
 
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+        {% block domready %}
+
+        {% endblock %}
     </body>
 </html>

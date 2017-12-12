@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.conf import settings
 from django import forms
 from django.utils.timezone import datetime
 from django.utils.translation import ugettext_lazy as _
@@ -7,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 from accounts.models import BankAccount, Transaction
 from categories.models import Category
-from accounts.mixins import CategoryMixin, DescriptionMixin, AccountMixin
+from accounts.mixins import CategoryMixin, DescriptionMixin, AccountMixin, CommentMixin
 
 
 class AddBankAccountForm(DescriptionMixin, forms.ModelForm):
@@ -26,7 +27,7 @@ class EditBankAccountForm(DescriptionMixin, forms.ModelForm):
         exclude = ('owner', 'balance', 'currency')
 
 
-class TransactionForm(DescriptionMixin, CategoryMixin, forms.ModelForm):
+class TransactionForm(CommentMixin, CategoryMixin, forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
@@ -37,7 +38,7 @@ class TransactionForm(DescriptionMixin, CategoryMixin, forms.ModelForm):
 
     class Meta:
         model = Transaction
-        fields = ('amount', 'category', 'tr_tags', 'description')
+        fields = ('amount', 'category', 'tr_tags', 'comment')
 
     amount = forms.DecimalField(max_digits=12,
                                 decimal_places=2,
@@ -45,7 +46,7 @@ class TransactionForm(DescriptionMixin, CategoryMixin, forms.ModelForm):
                                 label=_("Amount"))
 
 
-class MoveMoneyForm(AccountMixin, DescriptionMixin, CategoryMixin, forms.ModelForm):
+class MoveMoneyForm(AccountMixin, CommentMixin, CategoryMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
         self.acc = kwargs.pop('account')
@@ -57,10 +58,9 @@ class MoveMoneyForm(AccountMixin, DescriptionMixin, CategoryMixin, forms.ModelFo
         self.fields['category'].queryset = Category.objects.filter(owner=self.request.user) \
                                                            .filter(cat_type=self.cat_type)
 
-
     class Meta:
         model = Transaction
-        fields = ('account', 'amount', 'category', 'tr_tags', 'description')
+        fields = ('account', 'amount', 'category', 'tr_tags', 'comment')
 
     amount = forms.DecimalField(max_digits=12,
                                 decimal_places=2,
@@ -68,21 +68,24 @@ class MoveMoneyForm(AccountMixin, DescriptionMixin, CategoryMixin, forms.ModelFo
                                 label=_("Amount"))
 
 
-class ExchangeForm(AccountMixin, DescriptionMixin, forms.ModelForm):
+class ExchangeForm(DescriptionMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request')
         self.acc = kwargs.pop('account')
         self.cat_type = kwargs.pop('cat_type')
         super(ExchangeForm, self).__init__(*args, **kwargs)
-        self.fields['account'].queryset = BankAccount.objects.filter(owner=self.request.user)\
-                                                             .exclude(slug=self.acc.slug)
-        self.fields['category'].queryset = Category.objects.filter(owner=self.request.user) \
+        self.fields['category'].queryset = Category.objects.filter(owner=self.acc.owner) \
                                                            .filter(cat_type=self.cat_type)
+        self.fields['tr_from'].queryset = BankAccount.objects.filter(owner=self.acc.owner)
+        self.fields['tr_from'].initial = BankAccount.objects.filter(owner=self.acc.owner).first()
+        self.fields['tr_to'].queryset = BankAccount.objects.filter(owner=self.acc.owner)\
+                                                        .exclude(currency=self.acc.currency)
 
     class Meta:
         model = Transaction
-        fields = ('account', 'amount', 'category', 'tr_tags', 'description')
+        fields = ('tr_from', 'tr_to', 'category', 'comment', 'tr_tags')
 
+    tr_from = forms.ModelChoiceField(queryset=None, disabled=True)
+    tr_to = forms.ModelChoiceField(queryset=None)
     amount = forms.DecimalField(max_digits=12,
                                 decimal_places=2,
                                 min_value=0,

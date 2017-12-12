@@ -8,6 +8,12 @@ class DescriptionMixin(forms.Form):
                                   label=_("Description"))
 
 
+class CommentMixin(forms.Form):
+    description = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 50}),
+                                  required=False,
+                                  label=_("Comment"))
+
+
 class CategoryMixin(forms.Form):
     category = forms.ModelChoiceField(queryset=None,
                                       required=False,

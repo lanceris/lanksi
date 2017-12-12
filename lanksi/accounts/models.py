@@ -40,23 +40,33 @@ class BankAccount(models.Model):
         verbose_name_plural = _('Bank Accounts')
 
     @atomic
-    def add_money(self, amount, tags, category, description):
+    def add_money(self, amount, currency, tags, category, comment):
         self.balance += amount
-        transaction = self._create_transaction(settings.TR_ADD, amount, tags, category, description)
+        transaction = self._create_transaction(tr_type=settings.TR_ADD,
+                                               amount=amount,
+                                               currency=currency,
+                                               tags=tags,
+                                               category=category,
+                                               comment=comment)
         self.save()
         transaction.save()
 
     @atomic
-    def withdraw_money(self, amount, tags, category, description):
+    def withdraw_money(self, amount, currency, tags, category, comment):
         if (self.balance - amount) < 0:
             raise Exception("Withdraw amount couldn't be more than account balance")
         self.balance -= amount
-        transaction = self._create_transaction(settings.TR_WITHDRAW, amount,  tags, category, description)
+        transaction = self._create_transaction(tr_type=settings.TR_WITHDRAW,
+                                               amount=amount,
+                                               currency=currency,
+                                               tags=tags,
+                                               category=category,
+                                               comment=comment)
         self.save()
         transaction.save()
 
     @atomic
-    def move_money(self, to_account, amount, category, tags, description):
+    def move_money(self, to_account, currency, amount, category, tags, comment):
         if (self.balance - amount) < 0:
             raise Exception("Withdraw amount couldn't be more than account balance")
         if self.currency != to_account.currency:
@@ -65,30 +75,39 @@ class BankAccount(models.Model):
             raise Exception("Sender and recipient accounts are the same")
         self.balance -= amount
         to_account.balance += amount
-        transaction = self._create_transaction(settings.TR_MOVE, amount, tags, category, description, to_account)
+        transaction = self._create_transaction(tr_type=settings.TR_MOVE,
+                                               amount=amount,
+                                               currency=currency,
+                                               tags=tags,
+                                               category=category,
+                                               comment=comment,
+                                               recipient=to_account)
         self.save()
         to_account.save()
         transaction.save()
 
     @atomic
-    def exchange_money(self,
-                       to_account,
-                       amount,
-                       currency_from,
-                       currency_to,
-                       tags,
-                       category,
-                       description):
+    def exchange_money(self, to_account, amount, currency_from, currency_to, tags, category, comment):
         exchange_rate = ExchangeRate.objects.get(base_currency=currency_to,
                                                  other_currency=currency_from).value
         self.balance -= amount
         to_account.balance += amount/exchange_rate
-        transaction = self._create_transaction(settings.TR_EXCHANGE, amount, tags, category, description)
+        transaction = self._create_transaction(tr_type=settings.TR_EXCHANGE,
+                                               amount=amount,
+                                               currency=currency_from,
+                                               tags=tags,
+                                               category=category,
+                                               comment=comment,
+                                               recipient=to_account,
+                                               other_currency=currency_to)
         self.save()
         transaction.save()
         to_account.save()
 
-    def _create_transaction(self, tr_type, amount, tags, category, description, recipient=None):
+    def _create_transaction(self, tr_type, amount,
+                            currency, tags, category,
+                            comment, recipient=None,
+                            other_currency=None):
         if amount < 0:
             raise Exception("Invalid amount")
         recipient_balance = None
@@ -101,7 +120,9 @@ class BankAccount(models.Model):
                            category=category,
                            balance=self.balance,
                            recipient_balance=recipient_balance,
-                           comment=description)
+                           comment=comment,
+                           currency=currency,
+                           recipient_currency=other_currency)
 
 
 class Transaction(models.Model):
@@ -134,8 +155,12 @@ class Transaction(models.Model):
                                             verbose_name=_('Recipient balance'))
     currency = models.CharField(max_length=3,
                                 choices=settings.CURRENCIES,
-                                default='RUB',
                                 verbose_name=_('Currency'))
+    recipient_currency = models.CharField(max_length=3,
+                                          choices=settings.CURRENCIES,
+                                          blank=True,
+                                          null=True,
+                                          verbose_name=_('Recipient currency'))
 
     def __str__(self):
         try:

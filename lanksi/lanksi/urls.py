@@ -22,8 +22,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.i18n import i18n_patterns
 
 from accounts import views as bank_views
-urlpatterns = [url(r'^i18n/', include('django.conf.urls.i18n')),
-               url(r'^set-language/', bank_views.set_language, name='set_language'),]
+urlpatterns = [url(r'^i18n/', include('django.conf.urls.i18n')),]
 
 urlpatterns += i18n_patterns(
     url(r'^admin/', admin.site.urls),

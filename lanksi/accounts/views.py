@@ -4,16 +4,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.views.generic import TemplateView
+from django.utils.translation import ugettext_lazy as _
 
 from accounts.models import BankAccount, Transaction, ExchangeRate
 from accounts.forms import TransactionForm, MoveMoneyForm,\
                     FilterHistoryForm, AddBankAccountForm, \
                     EditBankAccountForm, ExchangeForm
 
-
-def set_language(request):
-    return render(request, 'set_language.html', {'LANGUAGES': settings.LANGUAGES,
-                                                 'SELECTEDLANG': request.LANGUAGE_CODE})
 
 def get_sums(spis):
     gena = []
@@ -33,18 +30,7 @@ def get_sums(spis):
 
 class IndexView(TemplateView):
 
-    template_name = 'base.html'
-
-    def get_context_data(self, **kwargs):
-        rates = ExchangeRate.objects.all()
-        if self.request.user.is_authenticated():
-            accounts = BankAccount.objects.filter(owner=self.request.user)
-        else:
-            accounts = BankAccount.objects.none()
-        sums = get_sums(accounts.values('currency', 'balance'))
-        return {'rates': rates,
-                'accounts': accounts,
-                'sums': sums}
+    template_name = 'index.html'
 
 
 def register(request):
@@ -60,40 +46,25 @@ def register(request):
 
 
 #region accounts
-def get_history(accounts, queryset):
+def get_history(queryset):
     history_items = []
     for t in queryset:
-        #FIXME: tags not shows up properly
-        item = {'transaction_id': t.id, 'type': None, 'description': t.comment, 'datetime': t.created, 'tags': t.tr_tags.all,
-                'debit': '', 'credit': '', 'from': '', 'to': ''}
+        item = {'transaction_id': t.id, 'type': None, 'description': t.comment, 'datetime': t.created, 'category': _('No category'),
+                'amount': t.tr_amount, 'currency': t.currency, 'from': '', 'to': ''}
+        if t.category:
+            item['category'] = t.category
         if t.tr_type == settings.TR_ADD:
             item['type'] = 1
-            item['credit'] = t.tr_amount
-            item['balance'] = t.balance
-            item['balance_before'] = t.balance - t.tr_amount
         elif t.tr_type == settings.TR_WITHDRAW:
             item['type'] = 2
-            item['debit'] = t.tr_amount
-            item['balance'] = t.balance
-            item['balance_before'] = t.balance + t.tr_amount
+
         elif t.tr_type == settings.TR_MOVE:
             item['type'] = 3
-            if t.tr_from in accounts:
-                item['debit'] = t.tr_amount
-                item['balance'] = t.balance
-                item['to'] = t.tr_from
-                item['from'] = t.tr_to
-                item['balance_before'] = t.balance + t.tr_amount
-            else:
-                item['credit'] = t.tr_amount
-                item['balance'] = t.recipient_balance
-                item['from'] = t.tr_from
-                item['balance_before'] = t.recipient_balance - t.tr_amount
+
         elif t.tr_type == settings.TR_EXCHANGE:
             item['type'] = 4
 
-            #TODO: exchange logic
-            pass
+
         history_items.append(item)
 
     return history_items
@@ -129,8 +100,7 @@ def list_(request):
     else:
         form = FilterHistoryForm(request=request)
 
-    history_items = get_history(accounts=accounts,
-                                queryset=queryset)
+    history_items = get_history(queryset=queryset)
     return render(request, 'accounts/list_.html', {'accounts': accounts,
                                                    'form': form,
                                                    'history': history_items})
@@ -201,9 +171,10 @@ def add_money(request, slug):
         if form.is_valid():
             cd = form.cleaned_data
             account.add_money(amount=cd['amount'],
+                              currency=account.currency,
                               tags=cd['tr_tags'],
                               category=cd['category'],
-                              description=cd['description'])
+                              comment=cd['description'])
             return redirect(reverse("accounts:details", args=[account.slug]))
     else:
         form = TransactionForm(request=request, cat_type=settings.TR_ADD)
@@ -220,9 +191,10 @@ def withdraw_money(request, slug):
         if form.is_valid():
             cd = form.cleaned_data
             account.withdraw_money(amount=cd['amount'],
+                                   currency=account.currency,
                                    tags=cd['tr_tags'],
                                    category=cd['category'],
-                                   description=cd['description'])
+                                   comment=cd['description'])
             return redirect(reverse("accounts:details", args=[account.slug]))
     else:
         form = TransactionForm(request=request, cat_type=settings.TR_WITHDRAW)
@@ -243,9 +215,10 @@ def move_money(request, slug):
             cd = form.cleaned_data
             account.move_money(to_account=cd['account'],
                                amount=cd['amount'],
+                               currency=account.currency,
                                tags=cd['tr_tags'],
                                category=cd['category'],
-                               description=cd['description'])
+                               comment=cd['description'])
             return redirect(reverse("accounts:details", args=[account.slug]))
     else:
         form = MoveMoneyForm(request=request, account=account, cat_type=settings.TR_MOVE)
@@ -259,21 +232,20 @@ def exchange_money(request, slug):
     account = get_object_or_404(BankAccount, slug=slug, owner=request.user)
     if request.method == 'POST':
         form = ExchangeForm(request.POST,
-                            request=request,
                             account=account,
                             cat_type=settings.TR_EXCHANGE)
         if form.is_valid():
             cd = form.cleaned_data
-            account.exchange_money(to_account=cd['account'],
+            account.exchange_money(to_account=cd['other_account'],
                                    amount=cd['amount'],
                                    currency_from=account.currency,
-                                   currency_to=cd['account'].currency,
+                                   currency_to=cd['other_account'].currency,
                                    tags=cd['tr_tags'],
                                    category=cd['category'],
-                                   description=cd['description'])
+                                   comment=cd['comment'])
             return redirect(reverse("accounts:details", args=[account.slug]))
     else:
-        form = ExchangeForm(request=request, account=account, cat_type=settings.TR_EXCHANGE)
+        form = ExchangeForm(account=account, cat_type=settings.TR_EXCHANGE)
     return render(request, "accounts/money_transfer.html", {'account': account,
                                                             'form': form,
                                                             'msg': 'Exchange money'})

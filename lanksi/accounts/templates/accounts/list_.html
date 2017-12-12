@@ -7,86 +7,66 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "accounts:add" %}">{% trans "Create new account" %}</a>
-    <p>{% trans "Hello" %}, {{ request.user }}</p>
-    {% for account in accounts %}
-        <ul>
-            <li class="bankaccount">
-                <a href="{% url "accounts:details" account.slug %}">{{ account.label }}</a>
-                <br>
-                {{ account.balance }} {{ account.currency }}
-                <br>
-                {% trans "Created" %} {{ account.creation_date }}
-            </li>
-        </ul>
-    {% endfor %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3 border">
+                <a href="{% url "accounts:add" %}">{% trans "Create new account" %}</a>
+                <p>{% trans "Hello" %}, {{ request.user }}</p>
+                {% for account in accounts %}
+                    <ul>
+                        <li class="bankaccount">
+                            <a href="{% url "accounts:details" account.slug %}">{{ account.label }}</a>
+                            <br>
+                            {{ account.balance }} {{ account.currency }}
+                            <br>
+                            {% trans "Created" %} {{ account.creation_date }}
+                        </li>
+                    </ul>
+                {% endfor %}
+            </div>
+            <div class="col-sm-9">
+                <h2>{% trans "History" %}</h2>
 
-    <h2>{% trans "History" %}</h2>
+                <div id="history-filter">
+                    <p>{% trans "Filter" %}:</p>
+                    <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="{% trans "Apply" %}">
+                </form>
+                </div>
 
-    <p>{% trans "Filter" %}:</p>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="{% trans "Apply" %}">
-    </form>
+                {% for item in history %}
+                    <div class="history-item">
+                        <div class="history-type">
+                            {% if item.type == 1 %}
+                                <img src="{% static 'accounts/img/plus.png' %}" width="32px" height="32px" class="history-type">
+                            {% elif item.type == 2 %}
+                                <img src="{% static 'accounts/img/minus.png' %}" width="32px" height="32px" class="history-type">
+                            {% elif item.type == 3 %}
+                                <img src="{% static 'accounts/img/move.png' %}" width="32px" height="32px" class="history-type">
+                            {% elif item.type == 4 %}
+                                <img src="{% static 'accounts/img/exchange.png' %}" width="32px" height="32px" class="history-type">
+                            {% endif%}
+                        </div>
+                        <div class="history-category">
+                            {{ item.category }}
+                        </div>
+                        <div class="history-amount">
+                            {{ item.amount }} {{ item.currency }}
+                        </div>
+                        <div class="history-date">
+                            {{ item.datetime }}
+                        </div>
+                        <div class="history-desc">
+                            {{ item.description }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
-    <table class="table">
-        <tr>
-            <th> </th>
-            <th>Date</th>
-            <th>Credit</th>
-            <th>Debit</th>
-            <th>Balance</th>
-            <th>From</th>
-            <th>To</th>
-            <th>Tags</th>
-            <th>Description</th>
-            <th> </th>
-        </tr>
-    {% for item in history %}
-        <tr>
-            <td>
-                {% if item.type == 1 %}
-                    <img src="{% static 'accounts/img/plus.png' %}" width="32px" height="32px" class="history-type">
-                {% elif item.type == 2 %}
-                    <img src="{% static 'accounts/img/minus.png' %}" width="32px" height="32px" class="history-type">
-                {% elif item.type == 3 %}
-                    <img src="{% static 'accounts/img/move.png' %}" width="32px" height="32px" class="history-type">
-                {% elif item.type == 4 %}
-                    <img src="{% static 'accounts/img/exchange.png' %}" width="32px" height="32px" class="history-type">
-                {% endif%}
-            </td>
-            <td>
-                {{item.datetime}}
-            </td>
-            <td>
-                {{item.credit}}
-            </td>
-            <td>
-                {{item.debit}}
-            </td>
-            <td>
-                {{item.balance}}({{item.balance_before}})
-            </td>
-            <td>
-                {{item.from}}
-            </td>
-            <td>
-                {{ item.to }}
-            </td>
-            <td>
-                    {% for tag in item.tags %}
-                        <li> {{ tag.name }} </li>
-                    {% endfor %}
-            </td>
-            <td>
-                {{item.description}}
-            </td>
-            <td>
-                {{ item.transaction_id }}
-                <a href="{% url "patterns:add" %}?trans_id={{ item.transaction_id }}">{% trans "Save as template" %}</a>
-            </td>
-        </tr>
-    {% endfor %}
-    </table>
+{% block domready %}
 {% endblock %}
