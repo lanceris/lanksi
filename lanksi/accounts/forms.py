@@ -38,7 +38,7 @@ class TransactionForm(CommentMixin, CategoryMixin, forms.ModelForm):
 
     class Meta:
         model = Transaction
-        fields = ('amount', 'category', 'tr_tags', 'comment')
+        fields = ('amount', 'category', 'tr_tags')
 
     amount = forms.DecimalField(max_digits=12,
                                 decimal_places=2,
@@ -68,7 +68,7 @@ class MoveMoneyForm(AccountMixin, CommentMixin, CategoryMixin, forms.ModelForm):
                                 label=_("Amount"))
 
 
-class ExchangeForm(DescriptionMixin, forms.ModelForm):
+class ExchangeForm(CommentMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.acc = kwargs.pop('account')
         self.cat_type = kwargs.pop('cat_type')
@@ -78,7 +78,7 @@ class ExchangeForm(DescriptionMixin, forms.ModelForm):
         self.fields['tr_from'].queryset = BankAccount.objects.filter(owner=self.acc.owner)
         self.fields['tr_from'].initial = BankAccount.objects.filter(owner=self.acc.owner).first()
         self.fields['tr_to'].queryset = BankAccount.objects.filter(owner=self.acc.owner)\
-                                                        .exclude(currency=self.acc.currency)
+                                                           .exclude(currency=self.acc.currency)
 
     class Meta:
         model = Transaction
@@ -124,6 +124,7 @@ class FilterHistoryForm(AccountMixin, CategoryMixin, forms.Form):
     keywords = forms.CharField(required=False,
                                label=_("Keywords"))
     account = forms.ModelChoiceField(queryset=None,
-                                     required=False)
+                                     required=False,
+                                     label=_("Account"))
 
 

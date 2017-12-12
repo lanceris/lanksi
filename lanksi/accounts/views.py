@@ -28,11 +28,6 @@ def get_sums(spis):
     return new_gena
 
 
-class IndexView(TemplateView):
-
-    template_name = 'index.html'
-
-
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -55,12 +50,14 @@ def get_history(queryset):
             item['category'] = t.category
         if t.tr_type == settings.TR_ADD:
             item['type'] = 1
+            item['to'] = t.tr_from
         elif t.tr_type == settings.TR_WITHDRAW:
             item['type'] = 2
-
+            item['from'] = t.tr_from
         elif t.tr_type == settings.TR_MOVE:
             item['type'] = 3
-
+            item['from'] = t.tr_from
+            item['to'] = t.tr_to
         elif t.tr_type == settings.TR_EXCHANGE:
             item['type'] = 4
 

@@ -14,37 +14,39 @@
     <body>
         <div id="header">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand" href="/">Lanksi</a>
+                <a class="navbar-brand" href="{% url "accounts:list_" %}">Lanksi</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{% url "accounts:list_" %}">{% trans "Accounts" %} <span class="sr-only">(current)</span></a>
-                        </li>
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url "accounts:list_" %}">{% trans "Accounts" %} <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url "categories:list_" %}">{% trans "Categories" %}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url "goals:list_" %}">{% trans "Goals" %}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url "patterns:list_" %}">{% trans "Patterns" %}</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {% trans "Import & export credentials" %}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </li>
+                        {% endif %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url "categories:list_" %}">{% trans "Categories" %}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url "goals:list_" %}">{% trans "Goals" %}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url "patterns:list_" %}">{% trans "Patterns" %}</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {% trans "Import & export credentials" %}
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </li>
-                        <li class="navbar-item">
                             {% ifequal LANGUAGE_CODE "en"  %}
                             <a href="/ru{{ request.get_full_path|slice:'3:' }}">
                                 <img src="{% static 'accounts/img/russian.gif' %}">
@@ -57,34 +59,37 @@
                         </li>
 
                         {% if request.user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url "logout" %}">{% trans "Logout" %}</a>
-                        </li>
-                        {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url "login" %}">{% trans "Login" %}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url "register" %}">{% trans "Register" %}</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url "logout" %}">{% trans "Logout" %}</a>
+                            </li>
+                            {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url "login" %}">{% trans "Login" %}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url "register" %}">{% trans "Register" %}</a>
+                            </li>
                         {% endif %}
                     </ul>
                 </div>
             </nav>
         </div>
-        <div class="container">
-          <div class="row">
+        <div class="row">
             <div class="col-sm-9">
               {% block content %}
               {% endblock %}
             </div>
             <div class="col-sm-3">
                 {% block content-right %}
-                    <div class="exchange-rates border border-dark">
+
+                    <button data-toggle="collapse" data-target="#rates" class="btn btn-dark">
+                        Exchange rates
+                    </button>
+                    <div id="rates" class="collapse border border-dark">
                         <p class="text-center">{% trans "Exchange rates:" %}</p>
-                        <ul class="rates list-group">
+                        <ul class="list-group">
                             {% for rate in rates %}
-                                <li class="rate list-group-item">
+                                <li class="list-group-item">
                                     <p class="text-center">
                                         {{ rate }}
                                         <br>
@@ -99,8 +104,11 @@
                             {{ rates.0.date }}
                         </p>
                     </div>
-                    <hr>
-                    <div class="summary">
+
+                    <button data-toggle="collapse" data-target="#summary" class="btn btn-dark">
+                        Summary
+                    </button>
+                    <div id="summary" class="collapse">
                         <p class="text-center">{% trans "Summary table of account balances:" %}</p>
                         {% for account in accounts %}
                             <div class="account">
@@ -115,17 +123,21 @@
                             {{ sum.value }} {{ sum.currency }}
                         {% endfor %}
                     </div>
+
                 {% endblock %}
                 </div>
             </div>
-        </div>
 
 
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
-        {% block domready %}
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.js"></script>
+        <script>
+            $(document).ready(
+            {% block domready %}
 
-        {% endblock %}
+            {% endblock %}
+            )
+        </script>
     </body>
 </html>

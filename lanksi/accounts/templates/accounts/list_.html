@@ -26,12 +26,36 @@
             </div>
             <div class="col-sm-9">
                 <h2>{% trans "History" %}</h2>
+                <a href="#filter" data-toggle="collapse">{% trans "Filter" %}:</a>
+                <div id="filter" class="collapse history-filter">
 
-                <div id="history-filter">
-                    <p>{% trans "Filter" %}:</p>
-                    <form method="POST">
-                    {% csrf_token %}
-                    {{ form.as_p }}
+                    <form class="form-inline" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Category:</label>
+                            {{ form.category }}
+                        </div>
+                        <div class="form-group">
+                            <label>Account:</label>
+                            {{ form.account }}
+                        </div>
+                        <div class="form-group">
+                            <label>Time period:</label>
+                            {{ form.time_period }}
+                        </div>
+                        <div class="form-group">
+                            <label>From:</label>
+                            {{ form.date_from }}
+                        </div>
+                        <div class="form-group">
+                            <label>To:</label>
+                            {{ form.date_to }}
+                        </div>
+                        <div class="form-group">
+                            <label>Keywords:</label>
+                            {{ form.keywords }}
+                        </div>
+
                     <input type="submit" value="{% trans "Apply" %}">
                 </form>
                 </div>
@@ -61,12 +85,15 @@
                         <div class="history-desc">
                             {{ item.description }}
                         </div>
+                        <div class="history-from">
+                            {{ item.from }}
+                        </div>
+                        <div class="history-to">
+                            {{ item.to }}
+                        </div>
                     </div>
                 {% endfor %}
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block domready %}
 {% endblock %}
