@@ -19,7 +19,7 @@ class Goal(models.Model):
                                 choices=settings.CURRENCIES,
                                 default='RUB',
                                 verbose_name=_('Currency'))
-    description = models.TextField(blank=True,
+    description = models.CharField(blank=True,
                                    null=True,
                                    max_length=255,
                                    verbose_name=_('Description'))
@@ -36,7 +36,7 @@ class Goal(models.Model):
     def add_money(self, amount, acc_from):
         if amount < 0:
             raise Exception('Amount should be > 0')
-        elif amount + self.money_saved >= self.money_total:
+        elif amount + self.money_saved > self.money_total:
             raise Exception('Too much money to add')
         elif acc_from.balance - amount < 0:
             raise Exception('Not enough money')

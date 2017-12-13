@@ -1,13 +1,13 @@
 {% load staticfiles %}
 {% load i18n %}
-
+{% load get_percent %}
 
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>{% block title %}lanksi{% endblock %}</title>
+        <title>{% block title %}Welcome to Lanksi{% endblock %}</title>
         <link href="{% static "accounts/css/main.css" %}" rel="stylesheet">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
     </head>
@@ -76,10 +76,16 @@
             <div class="col-sm-3">
                 {% block content-right %}
 
-                    <button data-toggle="collapse" data-target="#rates" class="btn btn-dark">
-                        Exchange rates
+                    <button data-toggle="collapse" data-target="#rates" class="btn btn-sm btn-dark">
+                        {% trans "Exchange rates" %}
                     </button>
-                    <div id="rates" class="collapse border border-dark">
+                    <button data-toggle="collapse" data-target="#summary" class="btn btn-sm btn-dark">
+                        {% trans "Summary" %}
+                    </button>
+                    <button data-toggle="collapse" data-target="#goals" class="btn btn-sm btn-dark">
+                        {% trans "Goals" %}
+                    </button>
+                    <div id="rates" class="collapse border border-info">
                         <p class="text-center">{% trans "Exchange rates:" %}</p>
                         <ul class="list-group">
                             {% for rate in rates %}
@@ -99,10 +105,7 @@
                         </p>
                     </div>
 
-                    <button data-toggle="collapse" data-target="#summary" class="btn btn-dark">
-                        Summary
-                    </button>
-                    <div id="summary" class="collapse">
+                    <div id="summary" class="collapse border border-info">
                         <p class="text-center">{% trans "Summary table of account balances:" %}</p>
                         {% for account in accounts %}
                             <div class="account">
@@ -118,6 +121,37 @@
                         {% endfor %}
                     </div>
 
+                    <div id="goals" class="collapse border border-info">
+                        <p class="text-center">{% trans "Your goals" %}:</p>
+                        {% for goal in goals %}
+                            <div class="goal border border-info">
+                                {{ goal.name }}
+                                <br>
+                                <br>
+                                {% trans "Total" %}:
+                                <br>
+                                {{ goal.money_total }}
+                                <br>
+                                <br>
+                                {% trans "Saved up so far" %}:
+                                <br>
+                                {{ goal.money_saved }}
+                                <br>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success progress-bar-striped"
+                                         role="progressbar"
+                                         aria-valuenow="{{ goal.money_saved|get_percent:goal.money_total }}"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100"
+                                         style="width:{{ goal.money_saved|get_percent:goal.money_total }}%">
+                                        <span>{{ goal.money_saved|get_percent:goal.money_total }}% {% trans "Complete" %}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
                 {% endblock %}
                 </div>
             </div>
@@ -126,6 +160,7 @@
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script>
             $(document).ready(
             {% block domready %}

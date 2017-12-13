@@ -12,5 +12,18 @@
 }
 
 .account {
+    margin: 0.5em 0 0.5em 0;
+    background-color: aliceblue;
+}
+
+.history-item {
     margin: 1em 0 1em 0;
+    padding: 0.5em;
+    background-color: aliceblue;
+}
+
+.goal {
+    margin: 0.5em 0 0.5em 0;
+    padding: 0.2em;
+    background-color: aliceblue;
 }

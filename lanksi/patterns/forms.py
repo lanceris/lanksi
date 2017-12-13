@@ -1,10 +1,8 @@
 from django import forms
 from patterns.models import TransactionTemplate
 from accounts.models import Transaction
-from accounts.mixins import DescriptionMixin
 
-
-class PatternForm(DescriptionMixin, forms.ModelForm):
+class PatternForm(forms.ModelForm):
     class Meta:
         model = TransactionTemplate
         exclude = ('owner', )

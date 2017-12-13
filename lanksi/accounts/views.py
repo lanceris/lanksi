@@ -3,7 +3,9 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.core.serializers import get_serializer
+from django.views.generic import FormView
 from django.shortcuts import render, redirect, get_object_or_404, reverse
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from accounts.models import BankAccount, Transaction, ExchangeRate
 from accounts.forms import TransactionForm, MoveMoneyForm,\
@@ -126,13 +128,6 @@ def add(request):
         form = AddBankAccountForm()
     return render(request, 'accounts/add.html', {'form': form})
 
-
-@login_required
-def details(request, slug):
-    account = get_object_or_404(BankAccount, slug=slug, owner=request.user)
-    return render(request, "accounts/details.html", {'account': account})
-
-
 @login_required
 def edit(request, slug):
     account = BankAccount.objects.get(slug=slug, owner=request.user)
@@ -170,6 +165,7 @@ def confirm_delete(request, slug):
 
 
 #region operations
+
 @login_required
 def add_money(request, slug):
     account = get_object_or_404(BankAccount, slug=slug, owner=request.user)
@@ -181,7 +177,7 @@ def add_money(request, slug):
                               currency=account.currency,
                               tags=cd['tr_tags'],
                               category=cd['category'],
-                              comment=cd['description'])
+                              comment=cd['comment'])
             return redirect(reverse("accounts:details", args=[account.slug]))
     else:
         form = TransactionForm(request=request, cat_type=settings.TR_ADD)
@@ -225,7 +221,7 @@ def move_money(request, slug):
                                currency=account.currency,
                                tags=cd['tr_tags'],
                                category=cd['category'],
-                               comment=cd['description'])
+                               comment=cd['comment'])
             return redirect(reverse("accounts:details", args=[account.slug]))
     else:
         form = MoveMoneyForm(request=request, account=account, cat_type=settings.TR_MOVE)

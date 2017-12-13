@@ -9,10 +9,10 @@ from dateutil.relativedelta import relativedelta
 from accounts.models import BankAccount, Transaction
 from categories.models import Category
 from patterns.models import TransactionTemplate
-from accounts.mixins import CategoryMixin, DescriptionMixin, AccountMixin, CommentMixin
+from accounts.mixins import CategoryMixin, AccountMixin
 
 
-class AddBankAccountForm(DescriptionMixin, forms.ModelForm):
+class AddBankAccountForm(forms.ModelForm):
     class Meta:
         model = BankAccount
         exclude = ('owner',)
@@ -20,7 +20,7 @@ class AddBankAccountForm(DescriptionMixin, forms.ModelForm):
     balance = forms.CharField(max_length=15, initial=Decimal("0"))
 
 
-class EditBankAccountForm(DescriptionMixin, forms.ModelForm):
+class EditBankAccountForm(forms.ModelForm):
     label = forms.CharField()
 
     class Meta:
@@ -28,7 +28,7 @@ class EditBankAccountForm(DescriptionMixin, forms.ModelForm):
         exclude = ('owner', 'balance', 'currency')
 
 
-class TransactionForm(CommentMixin, CategoryMixin, forms.ModelForm):
+class TransactionForm(CategoryMixin, forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
@@ -36,18 +36,20 @@ class TransactionForm(CommentMixin, CategoryMixin, forms.ModelForm):
         super(TransactionForm, self).__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.filter(owner=self.request.user)\
                                                            .filter(cat_type=self.cat_type)
+        self.fields['pattern'].queryset = TransactionTemplate.objects.filter(owner=self.request.user)
 
     class Meta:
         model = Transaction
-        fields = ('amount', 'category', 'tr_tags')
+        fields = ('amount', 'category', 'comment', 'tr_tags')
 
+    pattern = forms.ModelChoiceField(queryset=None, required=False)
     amount = forms.DecimalField(max_digits=12,
                                 decimal_places=2,
                                 min_value=0,
                                 label=_("Amount"))
 
 
-class MoveMoneyForm(AccountMixin, CommentMixin, CategoryMixin, forms.ModelForm):
+class MoveMoneyForm(AccountMixin, CategoryMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
         self.acc = kwargs.pop('account')
@@ -61,7 +63,7 @@ class MoveMoneyForm(AccountMixin, CommentMixin, CategoryMixin, forms.ModelForm):
 
     class Meta:
         model = Transaction
-        fields = ('account', 'amount', 'category', 'tr_tags', 'comment')
+        fields = ('account', 'amount', 'comment', 'category', 'tr_tags')
 
     amount = forms.DecimalField(max_digits=12,
                                 decimal_places=2,
@@ -69,7 +71,7 @@ class MoveMoneyForm(AccountMixin, CommentMixin, CategoryMixin, forms.ModelForm):
                                 label=_("Amount"))
 
 
-class ExchangeForm(CommentMixin, forms.ModelForm):
+class ExchangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.acc = kwargs.pop('account')
         self.cat_type = kwargs.pop('cat_type')
@@ -78,11 +80,16 @@ class ExchangeForm(CommentMixin, forms.ModelForm):
                                                            .filter(cat_type=self.cat_type)
         self.fields['tr_to'].queryset = BankAccount.objects.filter(owner=self.acc.owner)\
                                                            .exclude(currency=self.acc.currency)
+        self.fields['tr_from'].queryset = BankAccount.objects.filter(owner=self.acc.owner)\
+                                                            .filter(currency=self.acc.currency)
 
     class Meta:
         model = Transaction
-        fields = ('tr_to', 'category', 'comment', 'tr_tags')
+        fields = ('tr_to', 'category', 'comment', 'amount', 'tr_tags')
 
+    tr_from = forms.ModelChoiceField(queryset=None,
+                                     label=_("From"),
+                                     )
     tr_to = forms.ModelChoiceField(queryset=None)
     amount = forms.DecimalField(max_digits=12,
                                 decimal_places=2,

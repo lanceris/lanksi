@@ -5,6 +5,7 @@
 
 <h2>{{ msg }}</h2>
 
+<a href="{% url "accounts:list_" %}">{% trans "Go back" %}</a>
 <form method="POST">
     {% csrf_token %}
 	{{ form.as_p }}

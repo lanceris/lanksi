@@ -29,11 +29,14 @@ class BankAccount(models.Model):
                                   verbose_name=_('Balance'))
     owner = models.ForeignKey(User,
                               verbose_name=_('Owner'))
-    description = models.TextField(blank=True,
-                                   verbose_name=_('Description'))
+    description = models.CharField(blank=True,
+                                   verbose_name=_('Description'),
+                                   max_length=255)
 
     def __str__(self):
-        return self.label
+        return "{} ({} {})".format(self.label,
+                                   self.balance,
+                                   self.currency)
 
     class Meta:
         verbose_name = _('Bank Account')
@@ -90,6 +93,8 @@ class BankAccount(models.Model):
     def exchange_money(self, to_account, amount, currency_from, currency_to, tags, category, comment):
         exchange_rate = ExchangeRate.objects.get(base_currency=currency_to,
                                                  other_currency=currency_from).value
+        if (self.balance - amount) < 0:
+            raise Exception("Exchange amount couldn't be more than account balance")
         self.balance -= amount
         to_account.balance += amount/exchange_rate
         transaction = self._create_transaction(tr_type=settings.TR_EXCHANGE,
@@ -132,7 +137,7 @@ class Transaction(models.Model):
                               null=True,
                               related_name='tr_to',
                               verbose_name=_('To'))
-    comment = models.TextField(blank=True,
+    comment = models.CharField(blank=True,
                                null=True,
                                max_length=255,
                                verbose_name=_('Comment'))
@@ -163,10 +168,29 @@ class Transaction(models.Model):
                                           verbose_name=_('Recipient currency'))
 
     def __str__(self):
-        try:
-            msg = self.tr_from.label + " -> " + self.tr_to.label + " at " + self.created.strftime('%d/%m/%Y')
-        except:
-            msg = self.tr_from.label + " -> " + "None" + " at " + self.created.strftime('%d/%m/%Y %H:%M:%S')
+        if self.tr_type == settings.TR_ADD:
+            msg = "Added {} {} to {} ({})".format(self.tr_amount,
+                                                  self.currency,
+                                                  self.tr_from,
+                                                  self.created.strftime("%d/%m/%Y %H:%M"))
+        elif self.tr_type == settings.TR_WITHDRAW:
+            msg = "Withdrawn {} {} from {} ({})".format(self.tr_amount,
+                                                        self.currency,
+                                                        self.tr_from,
+                                                        self.created.strftime("%d/%m/%Y %H:%M"))
+        elif self.tr_type == settings.TR_MOVE:
+            msg = "Moved {} {} from {} to {} ({})".format(self.tr_amount,
+                                                          self.currency,
+                                                          self.tr_from,
+                                                          self.tr_to,
+                                                          self.created.strftime("%d/%m/%Y %H:%M"))
+        elif self.tr_type == settings.TR_EXCHANGE:
+            msg = "Exchanged {} {} ({} -> {}({})) ({})".format(self.tr_amount,
+                                                               self.currency,
+                                                               self.tr_from,
+                                                               self.tr_to,
+                                                               self.recipient_currency,
+                                                               self.created.strftime("%d/%m/%Y %H:%M"))
         return msg
 
     class Meta:

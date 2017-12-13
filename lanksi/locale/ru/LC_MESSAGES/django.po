@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-12 13:56+0300\n"
+"POT-Creation-Date: 2017-12-14 01:33+0300\n"
 "PO-Revision-Date: 2017-12-11 12:17+0230\n"
 "Last-Translator: b'  <>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,63 +21,58 @@ msgstr ""
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Translated-Using: django-rosetta 0.7.14\n"
 
-#: accounts/forms.py:46 accounts/forms.py:68 accounts/forms.py:92
-#: accounts/models.py:145 goals/forms.py:31
+#: accounts/forms.py:49 accounts/forms.py:71 accounts/forms.py:97
+#: accounts/models.py:150 goals/forms.py:30
 msgid "Amount"
 msgstr "Сумма"
 
-#: accounts/forms.py:109
-msgid "Day"
-msgstr "День"
-
-#: accounts/forms.py:110
-msgid "Week"
-msgstr "Неделя"
-
-#: accounts/forms.py:111
-msgid "Month"
-msgstr "Месяц"
-
-#: accounts/forms.py:112
-msgid "Year"
-msgstr "Год"
-
-#: accounts/forms.py:117
-msgid "Time period"
-msgstr "Период времени"
-
-#: accounts/forms.py:120 accounts/models.py:129
+#: accounts/forms.py:91 accounts/forms.py:125 accounts/models.py:134
+#: accounts/templates/accounts/list_.html:76
 msgid "From"
 msgstr "От кого"
 
-#: accounts/forms.py:123 accounts/models.py:134
+#: accounts/forms.py:114
+msgid "Day"
+msgstr "День"
+
+#: accounts/forms.py:115
+msgid "Week"
+msgstr "Неделя"
+
+#: accounts/forms.py:116
+msgid "Month"
+msgstr "Месяц"
+
+#: accounts/forms.py:117
+msgid "Year"
+msgstr "Год"
+
+#: accounts/forms.py:122 accounts/templates/accounts/list_.html:72
+msgid "Time period"
+msgstr "Период времени"
+
+#: accounts/forms.py:128 accounts/models.py:139
+#: accounts/templates/accounts/list_.html:80
 msgid "To"
 msgstr "Кому"
 
-#: accounts/forms.py:125
+#: accounts/forms.py:130 accounts/templates/accounts/list_.html:84
 msgid "Keywords"
 msgstr "Ключевые слова"
 
-#: accounts/mixins.py:8 accounts/models.py:33 goals/models.py:25
-#: patterns/models.py:11
-msgid "Description"
-msgstr "Описание"
+#: accounts/forms.py:133 accounts/mixins.py:13
+#: accounts/templates/accounts/list_.html:68
+msgid "Account"
+msgstr "Счёт"
 
-#: accounts/mixins.py:14 accounts/models.py:138
-msgid "Comment"
-msgstr "Комментарий"
-
-#: accounts/mixins.py:20 accounts/models.py:149 categories/models.py:20
+#: accounts/mixins.py:8 accounts/models.py:154
+#: accounts/templates/accounts/list_.html:64 categories/models.py:20
 #: categories/templates/categories/details.html:6
 msgid "Category"
 msgstr "Категория"
 
-#: accounts/mixins.py:25 accounts/templates/accounts/details.html:6
-msgid "Account"
-msgstr "Счёт"
-
 #: accounts/models.py:14 categories/models.py:10 goals/models.py:10
-#: patterns/models.py:9
+#: patterns/models.py:13
 msgid "Name"
 msgstr "Название"
 
@@ -85,80 +80,87 @@ msgstr "Название"
 msgid "Slug"
 msgstr "Slug"
 
-#: accounts/models.py:20 accounts/models.py:141
-#: accounts/templates/accounts/list_.html:22 categories/models.py:13
+#: accounts/models.py:20 accounts/models.py:146
+#: accounts/templates/accounts/list_.html:27 categories/models.py:13
 #: categories/templates/categories/list_.html:18 goals/models.py:26
-#: goals/templates/goals/list_.html:21 patterns/models.py:12
+#: goals/templates/goals/list_.html:21 patterns/models.py:16
 msgid "Created"
 msgstr "Создано"
 
-#: accounts/models.py:24 accounts/models.py:158 goals/models.py:21
+#: accounts/models.py:24 accounts/models.py:163 goals/models.py:21
 msgid "Currency"
 msgstr "Валюта"
 
-#: accounts/models.py:29 accounts/models.py:150
-#: accounts/templates/accounts/details.html:9
+#: accounts/models.py:29 accounts/models.py:155
 msgid "Balance"
 msgstr "Баланс"
 
 #: accounts/models.py:31 categories/models.py:12 goals/models.py:9
-#: patterns/models.py:8
+#: patterns/models.py:12
 msgid "Owner"
 msgstr "Владелец"
 
-#: accounts/models.py:39
+#: accounts/models.py:33 goals/models.py:25 patterns/models.py:15
+msgid "Description"
+msgstr "Описание"
+
+#: accounts/models.py:42
 msgid "Bank Account"
 msgstr "Счёт"
 
-#: accounts/models.py:40
+#: accounts/models.py:43
 msgid "Bank Accounts"
 msgstr "Счета"
 
-#: accounts/models.py:147 categories/models.py:9
+#: accounts/models.py:143
+msgid "Comment"
+msgstr "Комментарий"
+
+#: accounts/models.py:152 categories/models.py:9
 msgid "Type"
 msgstr "Тип"
 
-#: accounts/models.py:148
+#: accounts/models.py:153
 msgid "Tags"
 msgstr "Теги"
 
-#: accounts/models.py:155
+#: accounts/models.py:160
 msgid "Recipient balance"
 msgstr "Баланс получателя"
 
-#: accounts/models.py:163
+#: accounts/models.py:168
 msgid "Recipient currency"
 msgstr "Валюта получателя"
 
-#: accounts/models.py:173 patterns/models.py:10
+#: accounts/models.py:197 patterns/models.py:14
 msgid "Transaction"
 msgstr "Транзакция"
 
-#: accounts/models.py:174
+#: accounts/models.py:198
 msgid "Transactions"
 msgstr "Транзакции"
 
-#: accounts/models.py:178
+#: accounts/models.py:202
 msgid "Base currency"
 msgstr "Базовая валюта"
 
-#: accounts/models.py:179
+#: accounts/models.py:203
 msgid "Other currency"
 msgstr "Другая валюта"
 
-#: accounts/models.py:180
+#: accounts/models.py:204
 msgid "Value"
 msgstr "Значение"
 
-#: accounts/models.py:181
+#: accounts/models.py:205
 msgid "Date"
 msgstr "Дата"
 
-#: accounts/models.py:187
+#: accounts/models.py:211
 msgid "Exchange Rate"
 msgstr "Курс валюты"
 
-#: accounts/models.py:188
+#: accounts/models.py:212
 msgid "Exchange Rates"
 msgstr "Курсы валют"
 
@@ -168,7 +170,7 @@ msgstr "Создать счёт"
 
 #: accounts/templates/accounts/add.html:11
 #: accounts/templates/accounts/edit.html:13
-#: accounts/templates/accounts/money_transfer.html:11
+#: accounts/templates/accounts/money_transfer.html:12
 #: categories/templates/categories/add.html:16
 #: categories/templates/categories/edit.html:15
 #: goals/templates/goals/add.html:11 goals/templates/goals/add_money.html:15
@@ -202,35 +204,6 @@ msgstr "Да"
 msgid "No, go back"
 msgstr "Нет, вернуться"
 
-#: accounts/templates/accounts/details.html:7
-msgid "Back to accounts list"
-msgstr "К списку счетов"
-
-#: accounts/templates/accounts/details.html:14
-msgid "Edit account"
-msgstr "Редактировать счёт"
-
-#: accounts/templates/accounts/details.html:15
-msgid "Delete account"
-msgstr "Удалить счёт"
-
-#: accounts/templates/accounts/details.html:16
-#: goals/templates/goals/list_.html:19
-msgid "Add money"
-msgstr "Внести доход"
-
-#: accounts/templates/accounts/details.html:17
-msgid "Withdraw money"
-msgstr "Внести расход"
-
-#: accounts/templates/accounts/details.html:18
-msgid "Transfer money"
-msgstr "Перевести деньги"
-
-#: accounts/templates/accounts/details.html:19
-msgid "Exchange money"
-msgstr "Обменять деньги"
-
 #: accounts/templates/accounts/edit.html:5
 #: categories/templates/categories/details.html:14
 #: categories/templates/categories/edit.html:4
@@ -241,6 +214,7 @@ msgid "Edit"
 msgstr "Изменить"
 
 #: accounts/templates/accounts/edit.html:9
+#: accounts/templates/accounts/money_transfer.html:8
 #: categories/templates/categories/add.html:12
 #: categories/templates/categories/edit.html:11
 #: goals/templates/goals/edit.html:9 patterns/templates/patterns/edit.html:9
@@ -248,7 +222,7 @@ msgid "Go back"
 msgstr "Назад"
 
 #: accounts/templates/accounts/list_.html:6
-#: accounts/templates/accounts/list_.html:14
+#: accounts/templates/accounts/list_.html:13
 #: categories/templates/categories/list_.html:5
 #: categories/templates/categories/list_.html:10
 #: goals/templates/goals/list_.html:5 patterns/templates/patterns/list_.html:5
@@ -256,32 +230,77 @@ msgstr "Назад"
 msgid "Hello"
 msgstr "Здравствуйте"
 
-#: accounts/templates/accounts/list_.html:13
+#: accounts/templates/accounts/list_.html:16
 msgid "Create new account"
 msgstr "Создать счёт"
 
-#: accounts/templates/accounts/list_.html:28
+#: accounts/templates/accounts/list_.html:31
+msgid "Edit account"
+msgstr "Редактировать счёт"
+
+#: accounts/templates/accounts/list_.html:35
+msgid "Delete account"
+msgstr "Удалить счёт"
+
+#: accounts/templates/accounts/list_.html:39
+#: goals/templates/goals/list_.html:19
+msgid "Add money"
+msgstr "Внести доход"
+
+#: accounts/templates/accounts/list_.html:43
+msgid "Withdraw money"
+msgstr "Внести расход"
+
+#: accounts/templates/accounts/list_.html:47
+msgid "Transfer money"
+msgstr "Перевести деньги"
+
+#: accounts/templates/accounts/list_.html:51
+msgid "Exchange money"
+msgstr "Обменять деньги"
+
+#: accounts/templates/accounts/list_.html:57
 msgid "History"
 msgstr "История"
 
-#: accounts/templates/accounts/list_.html:31
+#: accounts/templates/accounts/list_.html:58
 msgid "Filter"
 msgstr "Фильтр"
 
-#: accounts/templates/accounts/list_.html:35
+#: accounts/templates/accounts/list_.html:88
 msgid "Apply"
 msgstr "Применить"
 
-#: accounts/views.py:52
+#: accounts/templates/accounts/list_.html:125
+msgid "Save as template"
+msgstr "Сохранить как шаблон"
+
+#: accounts/views.py:49
 msgid "No category"
 msgstr "Без категории"
 
+#: accounts/views.py:186
+msgid "Add money to \"{}\""
+msgstr "Внести доход в"
+
+#: accounts/views.py:206
+msgid "Withdraw money from \"{}\""
+msgstr "Внести расход в"
+
+#: accounts/views.py:230
+msgid "Move money from \"{}\""
+msgstr "Перевести деньги из"
+
+#: accounts/views.py:254
+msgid "Exchange money from \"{}\""
+msgstr "Обменять деньги из"
+
 #: categories/models.py:14 categories/templates/categories/list_.html:20
-#: goals/models.py:27 goals/templates/goals/list_.html:23 patterns/models.py:13
+#: goals/models.py:27 goals/templates/goals/list_.html:23 patterns/models.py:17
 msgid "Updated"
 msgstr "Обновлено"
 
-#: categories/models.py:21 templates/base.html:28
+#: categories/models.py:21 templates/base.html:29
 msgid "Categories"
 msgstr "Категории"
 
@@ -302,11 +321,11 @@ msgstr "Тип категории"
 msgid "New category"
 msgstr "Создать категорию"
 
-#: goals/forms.py:27
+#: goals/forms.py:26
 msgid "Take money from"
 msgstr "Взять деньги из"
 
-#: goals/models.py:13
+#: goals/models.py:13 templates/base.html:131
 msgid "Total"
 msgstr "Итого"
 
@@ -318,7 +337,7 @@ msgstr "Накоплено"
 msgid "Goal"
 msgstr "Цель"
 
-#: goals/models.py:31 templates/base.html:31
+#: goals/models.py:31 templates/base.html:32 templates/base.html:86
 msgid "Goals"
 msgstr "Цели"
 
@@ -351,7 +370,7 @@ msgstr "Удалить цель"
 msgid "New Goal"
 msgstr "Создать цель"
 
-#: goals/templates/goals/list_.html:16
+#: goals/templates/goals/list_.html:16 templates/base.html:136
 msgid "Saved up so far"
 msgstr "Накоплено"
 
@@ -391,11 +410,11 @@ msgstr "Доллар США"
 msgid "Euro"
 msgstr "Евро"
 
-#: patterns/models.py:16
+#: patterns/models.py:20
 msgid "Transaction Template"
 msgstr "Шаблон"
 
-#: patterns/models.py:17
+#: patterns/models.py:21
 msgid "Transaction Templates"
 msgstr "Шаблоны"
 
@@ -408,50 +427,62 @@ msgstr "Создать шаблон"
 msgid "New pattern"
 msgstr "Новый шаблон"
 
-#: templates/base.html:25
+#: templates/base.html:26
 msgid "Accounts"
 msgstr "Счета"
 
-#: templates/base.html:34
+#: templates/base.html:35
 msgid "Patterns"
 msgstr "Шаблоны"
 
-#: templates/base.html:38
+#: templates/base.html:39
 msgid "Import & export credentials"
 msgstr "Импорт и экспорт данных"
 
-#: templates/base.html:61
+#: templates/base.html:57
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:65 templates/registration/login.html:4
+#: templates/base.html:61 templates/registration/login.html:4
 #: templates/registration/login.html:7 templates/registration/login.html:19
 msgid "Login"
 msgstr "Войти"
 
-#: templates/base.html:68
+#: templates/base.html:64
 msgid "Register"
 msgstr "Регистрация"
 
-#: templates/base.html:84
+#: templates/base.html:80
+msgid "Exchange rates"
+msgstr "Курсы валют"
+
+#: templates/base.html:83
+msgid "Summary"
+msgstr "Остатки"
+
+#: templates/base.html:89
 msgid "Exchange rates:"
 msgstr "Курсы валют:"
 
-#: templates/base.html:97
+#: templates/base.html:102
 msgid "Last updated:"
 msgstr "Обновлено:"
 
-#: templates/base.html:104
+#: templates/base.html:109
 msgid "Summary table of account balances:"
 msgstr "Остаток на счетах:"
 
-#: templates/base.html:113
+#: templates/base.html:118
 msgid "Total:"
 msgstr "Итого:"
 
-#: templates/index.html:5 templates/index.html:10
-msgid "Welcome"
-msgstr "Добро пожаловать"
+#: templates/base.html:125
+msgid "Your goals"
+msgstr "Ваши цели"
+
+#: templates/base.html:147
+msgid "Complete"
+msgstr "Завершено"
 
 #: templates/manage_credentials.html:5 templates/manage_credentials.html:9
 msgid "Import & Export"
@@ -476,8 +507,11 @@ msgstr "Пожалуйста, используйте следующую форм
 msgid "Sign up"
 msgstr "Регистрация"
 
-#~ msgid "Save as template"
-#~ msgstr "Сохранить как шаблон"
+#~ msgid "Back to accounts list"
+#~ msgstr "К списку счетов"
+
+#~ msgid "Welcome"
+#~ msgstr "Добро пожаловать"
 
 #~ msgid "Remained to save uo"
 #~ msgstr "Осталость накопить"

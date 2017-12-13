@@ -8,5 +8,5 @@
 {% block content %}
     <h1>Delete {{ account.label }}?</h1>
     <a href="{% url "accounts:confirm_delete" account.slug %}">{% trans "Yes" %}</a>
-    <a href="{% url "accounts:details" account.slug %}">{% trans "No, go back" %}</a>
+    <a href="{% url "accounts:list_" %}">{% trans "No, go back" %}</a>
 {% endblock %}

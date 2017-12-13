@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "accounts:details" account.slug %}">{% trans "Go back" %}</a>
+    <a href="{% url "accounts:list_" %}">{% trans "Go back" %}</a>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

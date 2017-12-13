@@ -3,10 +3,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from goals.models import Goal
 from accounts.models import BankAccount
-from accounts.mixins import DescriptionMixin
 
 
-class GoalForm(DescriptionMixin, forms.ModelForm):
+class GoalForm(forms.ModelForm):
     class Meta:
         model = Goal
         exclude = ('owner', )
