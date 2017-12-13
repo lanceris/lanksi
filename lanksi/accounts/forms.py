@@ -8,6 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 from accounts.models import BankAccount, Transaction
 from categories.models import Category
+from patterns.models import TransactionTemplate
 from accounts.mixins import CategoryMixin, DescriptionMixin, AccountMixin, CommentMixin
 
 

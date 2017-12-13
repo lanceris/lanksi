@@ -10,19 +10,48 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-3 border">
-                <a href="{% url "accounts:add" %}">{% trans "Create new account" %}</a>
-                <p>{% trans "Hello" %}, {{ request.user }}</p>
+                <p class="text-center">{% trans "Hello" %}, {{ request.user }}</p>
+                <div class="text-center">
+                    <a href="{% url "accounts:add" %}" class="btn btn-smm btn-info btn-center">
+                {% trans "Create new account" %}
+            </a>
+                </div>
+
                 {% for account in accounts %}
-                    <ul>
-                        <li class="bankaccount">
-                            <a href="{% url "accounts:details" account.slug %}">{{ account.label }}</a>
-                            <br>
-                            {{ account.balance }} {{ account.currency }}
-                            <br>
-                            {% trans "Created" %} {{ account.creation_date }}
-                        </li>
-                    </ul>
-                {% endfor %}
+                    <div class="container border border-info account">
+                    <div>
+                        <p>{{ account.label }}</p>
+                        <br>
+                        {{ account.balance }} {{ account.currency }}
+                        <br>
+                        {% trans "Created" %} {{ account.creation_date }}
+                    </div>
+
+                        <a href="{% url "accounts:edit" account.slug %}">
+                            <img src="{% static 'accounts/img/edit.png' %}" title="{% trans "Edit account" %}">
+                        </a>
+
+                        <a href="{% url "accounts:delete" account.slug %}">
+                            <img src="{% static 'accounts/img/delete.png' %}" title="{% trans "Delete account" %}">
+                        </a>
+
+                        <a href="{% url "accounts:add_money" account.slug %}">
+                            <img src="{% static 'accounts/img/plus.png' %}" title="{% trans "Add money" %}">
+                        </a>
+
+                        <a href="{% url "accounts:withdraw_money" account.slug %}">
+                            <img src="{% static 'accounts/img/minus.png' %}" title="{% trans "Withdraw money" %}">
+                        </a>
+
+                        <a href="{% url "accounts:move_money" account.slug %}">
+                            <img src="{% static 'accounts/img/move.png' %}" title="{% trans "Transfer money" %}">
+                        </a>
+
+                        <a href="{% url "accounts:exchange_money" account.slug %}">
+                            <img src="{% static 'accounts/img/exchange.png' %}" title="{% trans "Exchange money" %}">
+                        </a>
+                    </div>
+            {% endfor %}
             </div>
             <div class="col-sm-9">
                 <h2>{% trans "History" %}</h2>
@@ -61,35 +90,40 @@
                 </div>
 
                 {% for item in history %}
-                    <div class="history-item">
-                        <div class="history-type">
+                    <div class="history-item border border-info">
+                        <div class="history history-type">
                             {% if item.type == 1 %}
-                                <img src="{% static 'accounts/img/plus.png' %}" width="32px" height="32px" class="history-type">
+                                <img src="{% static 'accounts/img/plus.png' %}" class="history-type">
                             {% elif item.type == 2 %}
-                                <img src="{% static 'accounts/img/minus.png' %}" width="32px" height="32px" class="history-type">
+                                <img src="{% static 'accounts/img/minus.png' %}" class="history-type">
                             {% elif item.type == 3 %}
-                                <img src="{% static 'accounts/img/move.png' %}" width="32px" height="32px" class="history-type">
+                                <img src="{% static 'accounts/img/move.png' %}" class="history-type">
                             {% elif item.type == 4 %}
-                                <img src="{% static 'accounts/img/exchange.png' %}" width="32px" height="32px" class="history-type">
+                                <img src="{% static 'accounts/img/exchange.png' %}" class="history-type">
                             {% endif%}
                         </div>
-                        <div class="history-category">
+                        <div class="history history-category">
                             {{ item.category }}
                         </div>
-                        <div class="history-amount">
+                        <div class="history history-amount">
                             {{ item.amount }} {{ item.currency }}
                         </div>
-                        <div class="history-date">
+                        <div class="history history-date">
                             {{ item.datetime }}
                         </div>
-                        <div class="history-desc">
+                        <div class="history history-desc">
                             {{ item.description }}
                         </div>
-                        <div class="history-from">
+                        <div class="history history-from">
                             {{ item.from }}
                         </div>
-                        <div class="history-to">
+                        <div class="history history-to">
                             {{ item.to }}
+                        </div>
+                        <div class="history history-save-pattern">
+                            <a href="{% url "patterns:add" %}?trans_id={{ item.transaction_id }}">
+                                <img src="{% static "accounts/img/save.png" %}" title="{% trans "Save as template" %}">
+                            </a>
                         </div>
                     </div>
                 {% endfor %}
