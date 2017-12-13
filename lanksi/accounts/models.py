@@ -52,7 +52,7 @@ class BankAccount(models.Model):
         transaction.save()
 
     @atomic
-    def withdraw_money(self, amount, currency, tags, category, comment):
+    def withdraw_money(self, amount, currency, tags, category, comment=None):
         if (self.balance - amount) < 0:
             raise Exception("Withdraw amount couldn't be more than account balance")
         self.balance -= amount

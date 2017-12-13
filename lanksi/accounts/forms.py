@@ -75,16 +75,13 @@ class ExchangeForm(CommentMixin, forms.ModelForm):
         super(ExchangeForm, self).__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.filter(owner=self.acc.owner) \
                                                            .filter(cat_type=self.cat_type)
-        self.fields['tr_from'].queryset = BankAccount.objects.filter(owner=self.acc.owner)
-        self.fields['tr_from'].initial = BankAccount.objects.filter(owner=self.acc.owner).first()
         self.fields['tr_to'].queryset = BankAccount.objects.filter(owner=self.acc.owner)\
                                                            .exclude(currency=self.acc.currency)
 
     class Meta:
         model = Transaction
-        fields = ('tr_from', 'tr_to', 'category', 'comment', 'tr_tags')
+        fields = ('tr_to', 'category', 'comment', 'tr_tags')
 
-    tr_from = forms.ModelChoiceField(queryset=None, disabled=True)
     tr_to = forms.ModelChoiceField(queryset=None)
     amount = forms.DecimalField(max_digits=12,
                                 decimal_places=2,
@@ -128,3 +125,9 @@ class FilterHistoryForm(AccountMixin, CategoryMixin, forms.Form):
                                      label=_("Account"))
 
 
+class ExportDataForm(forms.Form):
+    file_to_export = forms.FileField()
+
+
+class ImportDataForm(forms.Form):
+    imported_file = forms.FileField()

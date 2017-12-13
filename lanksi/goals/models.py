@@ -40,17 +40,27 @@ class Goal(models.Model):
             raise Exception('Too much money to add')
         elif acc_from.balance - amount < 0:
             raise Exception('Not enough money')
+        elif acc_from.currency != self.currency:
+            raise Exception('Currencies must be the same')
         else:
-            if Category.objects.filter(name='To goal').exists():
+            if Category.objects.filter(name='Goal: "{}"'.format(self.name)).exists():
                 self.money_saved += amount
-                acc_from.withdraw_money(amount, '', Category.objects.get(name='To goal'), '')
+                acc_from.withdraw_money(amount=amount,
+                                        currency=self.currency,
+                                        tags='',
+                                        category=Category.objects.get(name='Goal: "{}"'.format(self.name)),
+                                        comment='')
                 self.save()
             else:
                 new_cat = Category.objects.create(cat_type=2,
-                                                  name='To goal',
+                                                  name='Goal: "{}"'.format(self.name),
                                                   owner=self.owner)
                 new_cat.save()
                 self.money_saved += amount
-                acc_from.withdraw_money(amount, '', Category.objects.get(name='To goal'), '')
+                acc_from.withdraw_money(amount=amount,
+                                        currency=self.currency,
+                                        tags='',
+                                        category=Category.objects.get(name='Goal: "{}"'.format(self.name)),
+                                        comment='')
                 self.save()
 

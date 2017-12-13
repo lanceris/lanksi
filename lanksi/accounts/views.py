@@ -2,14 +2,14 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.core.serializers import get_serializer
 from django.shortcuts import render, redirect, get_object_or_404, reverse
-from django.views.generic import TemplateView
 from django.utils.translation import ugettext_lazy as _
-
 from accounts.models import BankAccount, Transaction, ExchangeRate
 from accounts.forms import TransactionForm, MoveMoneyForm,\
                     FilterHistoryForm, AddBankAccountForm, \
-                    EditBankAccountForm, ExchangeForm
+                    EditBankAccountForm, ExchangeForm, ExportDataForm,\
+                    ImportDataForm
 
 
 def get_sums(spis):
@@ -67,9 +67,19 @@ def get_history(queryset):
     return history_items
 
 
+def save_accounts_data():
+    JSONseriaizer = get_serializer('json')
+    json_seriaizer = JSONseriaizer()
+    with open("file.json", "w") as out:
+        json_seriaizer.serialize(BankAccount.objects.all(), indent=4, stream=out)
+
+
 @login_required
 def manage_credentials(request):
-    return render(request, 'accounts/credentials.html', {})
+    export_form = ExportDataForm()
+    import_form = ImportDataForm()
+    return render(request, 'manage_credentials.html', {'export_form': export_form,
+                                                       'import_form': import_form})
 
 
 @login_required
@@ -177,7 +187,7 @@ def add_money(request, slug):
         form = TransactionForm(request=request, cat_type=settings.TR_ADD)
     return render(request, "accounts/money_transfer.html", {'account': account,
                                                             'form': form,
-                                                            'msg': 'Add money'})
+                                                            'msg': _('Add money to "{}"'.format(account.label))})
 
 
 @login_required
@@ -191,13 +201,13 @@ def withdraw_money(request, slug):
                                    currency=account.currency,
                                    tags=cd['tr_tags'],
                                    category=cd['category'],
-                                   comment=cd['description'])
+                                   comment=cd['comment'])
             return redirect(reverse("accounts:details", args=[account.slug]))
     else:
         form = TransactionForm(request=request, cat_type=settings.TR_WITHDRAW)
     return render(request, "accounts/money_transfer.html", {'account': account,
                                                             'form': form,
-                                                            'msg': 'Withdraw money'})
+                                                            'msg': _('Withdraw money from "{}"'.format(account.label))})
 
 
 @login_required
@@ -221,7 +231,7 @@ def move_money(request, slug):
         form = MoveMoneyForm(request=request, account=account, cat_type=settings.TR_MOVE)
     return render(request, "accounts/money_transfer.html", {'account': account,
                                                             'form': form,
-                                                            'msg': 'Move money from {}'.format(account.label)})
+                                                            'msg': _('Move money from "{}"'.format(account.label))})
 
 
 @login_required
@@ -233,10 +243,10 @@ def exchange_money(request, slug):
                             cat_type=settings.TR_EXCHANGE)
         if form.is_valid():
             cd = form.cleaned_data
-            account.exchange_money(to_account=cd['other_account'],
+            account.exchange_money(to_account=cd['tr_to'],
                                    amount=cd['amount'],
                                    currency_from=account.currency,
-                                   currency_to=cd['other_account'].currency,
+                                   currency_to=cd['tr_to'].currency,
                                    tags=cd['tr_tags'],
                                    category=cd['category'],
                                    comment=cd['comment'])
@@ -245,6 +255,6 @@ def exchange_money(request, slug):
         form = ExchangeForm(account=account, cat_type=settings.TR_EXCHANGE)
     return render(request, "accounts/money_transfer.html", {'account': account,
                                                             'form': form,
-                                                            'msg': 'Exchange money'})
+                                                            'msg': _('Exchange money from "{}"'.format(account.label))})
 
 #endregion operations

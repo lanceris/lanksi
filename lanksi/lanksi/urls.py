@@ -32,7 +32,8 @@ urlpatterns += i18n_patterns(
     url(r'^categories/', include('categories.urls', namespace='categories')),
     url(r'^goals/', include('goals.urls', namespace='goals')),
     url(r'^patterns/', include('patterns.urls', namespace='patterns')),
-    url(r'^accounts/', include('accounts.urls', namespace='accounts'))
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
+    url(r'^', bank_views.list_),
     )
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
