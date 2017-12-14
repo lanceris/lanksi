@@ -82,6 +82,7 @@ class ExchangeForm(forms.ModelForm):
                                                            .exclude(currency=self.acc.currency)
         self.fields['tr_from'].queryset = BankAccount.objects.filter(owner=self.acc.owner)\
                                                             .filter(currency=self.acc.currency)
+        self.fields['tr_from'].initial = self.acc
 
     class Meta:
         model = Transaction
@@ -90,7 +91,7 @@ class ExchangeForm(forms.ModelForm):
     tr_from = forms.ModelChoiceField(queryset=None,
                                      label=_("From"),
                                      )
-    tr_to = forms.ModelChoiceField(queryset=None)
+    tr_to = forms.ModelChoiceField(queryset=None, label=_("To"))
     amount = forms.DecimalField(max_digits=12,
                                 decimal_places=2,
                                 min_value=0,

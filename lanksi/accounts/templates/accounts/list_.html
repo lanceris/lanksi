@@ -11,13 +11,24 @@
         <div class="row">
             <div class="col-sm-3 border">
                 <p class="text-center">{% trans "Hello" %}, {{ request.user }}</p>
-                <div class="text-center">
-                    <a href="{% url "accounts:add" %}" class="btn btn-smm btn-info btn-center">
-                {% trans "Create new account" %}
-            </a>
-                </div>
 
-                {% for account in accounts %}
+                <button data-toggle="collapse" data-target="#accounts" class="btn btn-sm btn-dark">
+                    {% trans "Accounts" %}
+                </button>
+                <button data-toggle="collapse" data-target="#patterns" class="btn btn-sm btn-dark">
+                    {% trans "Patterns" %}
+                </button>
+
+
+                <div id="accounts" class="collapse in">
+
+                    <div class="text-center">
+                        <a href="{% url "accounts:add" %}" class="btn btn-sm btn-info btn-center">
+                            {% trans "Create new account" %}
+                        </a>
+                    </div>
+
+                    {% for account in accounts %}
                     <div class="container border border-info account">
                     <div>
                         <p>{{ account.label }}</p>
@@ -52,6 +63,39 @@
                         </a>
                     </div>
             {% endfor %}
+                </div>
+                <div id="patterns" class="collapse">
+                    <div class="text-center">
+                        <a href="{% url "patterns:add" %}" class="btn btn-sm btn-info btn-center">
+                            {% trans "Create new pattern" %}
+                        </a>
+                    </div>
+
+                    {% for pattern in patterns %}
+                    <div class="container border border-info account">
+                    <div>
+                        <p>{{ pattern.name }}</p>
+                        <br>
+                        {{ pattern.description }}
+                        <br>
+                        {{ pattern.transaction }}
+                        <br>
+                        <br>
+                        <br>
+                        {% trans "Created" %} {{ pattern.created }}
+                        {% trans "Updated" %} {{ pattern.updated }}
+                    </div>
+
+                        <a href="{% url "patterns:edit" pattern.id %}">
+                            <img src="{% static 'accounts/img/edit.png' %}" title="{% trans "Edit pattern" %}">
+                        </a>
+
+                        <a href="{% url "patterns:delete" pattern.id %}">
+                            <img src="{% static 'accounts/img/delete.png' %}" title="{% trans "Delete pattern" %}">
+                        </a>
+                    </div>
+            {% endfor %}
+                </div>
             </div>
             <div class="col-sm-9">
                 <h2>{% trans "History" %}</h2>
@@ -67,7 +111,7 @@
                         <div class="form-group">
                             <label>{% trans "Account" %}:</label>
                             {{ form.account }}
-                        </div>
+                         </div>
                         <div class="form-group">
                             <label>{% trans "Time period" %}:</label>
                             {{ form.time_period }}
@@ -103,22 +147,22 @@
                             {% endif%}
                         </div>
                         <div class="history history-category">
-                            {{ item.category }}
+                            {% trans "Category" %}: {{ item.category }}
                         </div>
                         <div class="history history-amount">
-                            {{ item.amount }} {{ item.currency }}
+                            {% trans "Amount" %}: {{ item.amount }} {{ item.currency }}
                         </div>
                         <div class="history history-date">
-                            {{ item.datetime }}
+                            {% trans "Date" %}: {{ item.datetime }}
                         </div>
                         <div class="history history-desc">
-                            {{ item.description }}
+                            {% trans "Comment" %}: {{ item.description }}
                         </div>
                         <div class="history history-from">
-                            {{ item.from }}
+                            {% trans "From" %}: {{ item.from }}
                         </div>
                         <div class="history history-to">
-                            {{ item.to }}
+                            {% trans "To" %}: {{ item.to }}
                         </div>
                         <div class="history history-save-pattern">
                             <a href="{% url "patterns:add" %}?trans_id={{ item.transaction_id }}">

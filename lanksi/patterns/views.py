@@ -12,18 +12,31 @@ def list_(request):
 @login_required
 def add(request):
     if request.method == 'POST':
-        form = PatternForm(request.POST,
-                           owner=request.user,
-                           transaction=Transaction.objects.get(id=request.GET.get('trans_id')))
+        try:
+            form = PatternForm(request.POST, owner=request.user,
+                               transaction=Transaction.objects.get(id=request.GET.get('trans_id')))
+        except:
+            form = PatternForm(request.POST, owner=request.user,
+                               transaction=Transaction.objects.none())
 
         if form.is_valid():
-            new_pat = form.save(commit=False)
-            new_pat.owner = request.user
-            new_pat.save()
+            cd = form.cleaned_data
+            try:
+                transaction = Transaction.objects.get(id=request.GET.get('trans_id'))
+            except:
+                transaction = cd['transaction']
+            TransactionTemplate.objects.create(owner=request.user,
+                                               name=cd['name'],
+                                               transaction=transaction,
+                                               description=cd['description'])
             return redirect(reverse("patterns:list_"))
     else:
-        form = PatternForm(owner=request.user,
-                           transaction=Transaction.objects.get(id=request.GET.get('trans_id')))
+        try:
+            form = PatternForm(owner=request.user,
+                               transaction=Transaction.objects.get(id=request.GET.get('trans_id')))
+        except:
+            form = PatternForm(owner=request.user,
+                               transaction=Transaction.objects.none())
     return render(request, 'patterns/add.html', {'form': form})
 
 

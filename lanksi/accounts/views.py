@@ -7,11 +7,17 @@ from django.views.generic import FormView
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+from accounts.mixins import AjaxFormMixin
 from accounts.models import BankAccount, Transaction, ExchangeRate
-from accounts.forms import TransactionForm, MoveMoneyForm,\
-                    FilterHistoryForm, AddBankAccountForm, \
-                    EditBankAccountForm, ExchangeForm, ExportDataForm,\
-                    ImportDataForm
+from accounts.forms import (TransactionForm,
+                            MoveMoneyForm,
+                            FilterHistoryForm,
+                            AddBankAccountForm,
+                            EditBankAccountForm,
+                            ExchangeForm,
+                            ExportDataForm,
+                            ImportDataForm)
+from patterns.models import TransactionTemplate
 
 
 def get_sums(spis):
@@ -87,6 +93,7 @@ def manage_credentials(request):
 @login_required
 def list_(request):
     accounts = BankAccount.objects.filter(owner=request.user)
+    patterns = TransactionTemplate.objects.filter(owner=request.user)
     from django.db.models import Q
     queryset = Transaction.objects.filter(
         Q(tr_from__in=accounts) | Q(tr_to__in=accounts)).order_by('-created')
@@ -111,6 +118,7 @@ def list_(request):
 
     history_items = get_history(queryset=queryset)
     return render(request, 'accounts/list_.html', {'accounts': accounts,
+                                                   'patterns': patterns,
                                                    'form': form,
                                                    'history': history_items})
 
@@ -166,6 +174,20 @@ def confirm_delete(request, slug):
 
 #region operations
 
+# class AddMoneyView(AjaxFormMixin, FormView):
+#     form_class = TransactionForm
+#     template_name = "accounts/money_transfer.html"
+#     success_url = "/accounts/"
+#
+#     def dispatch(self, request, *args, **kwargs):
+#         self.slug = kwargs.get('slug', None)
+#         self.user = kwargs.get('request', None)
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(AddMoneyView, self).get_context_data(**kwargs)
+#         context['account'] = BankAccount.objects.get(slug=self.slug, owner=self.request.user)
+#         return context
+
 @login_required
 def add_money(request, slug):
     account = get_object_or_404(BankAccount, slug=slug, owner=request.user)
@@ -178,7 +200,7 @@ def add_money(request, slug):
                               tags=cd['tr_tags'],
                               category=cd['category'],
                               comment=cd['comment'])
-            return redirect(reverse("accounts:details", args=[account.slug]))
+            return redirect(reverse("accounts:list_"))
     else:
         form = TransactionForm(request=request, cat_type=settings.TR_ADD)
     return render(request, "accounts/money_transfer.html", {'account': account,
@@ -198,7 +220,7 @@ def withdraw_money(request, slug):
                                    tags=cd['tr_tags'],
                                    category=cd['category'],
                                    comment=cd['comment'])
-            return redirect(reverse("accounts:details", args=[account.slug]))
+            return redirect(reverse("accounts:list_"))
     else:
         form = TransactionForm(request=request, cat_type=settings.TR_WITHDRAW)
     return render(request, "accounts/money_transfer.html", {'account': account,
@@ -222,7 +244,7 @@ def move_money(request, slug):
                                tags=cd['tr_tags'],
                                category=cd['category'],
                                comment=cd['comment'])
-            return redirect(reverse("accounts:details", args=[account.slug]))
+            return redirect(reverse("accounts:list_"))
     else:
         form = MoveMoneyForm(request=request, account=account, cat_type=settings.TR_MOVE)
     return render(request, "accounts/money_transfer.html", {'account': account,
@@ -246,7 +268,7 @@ def exchange_money(request, slug):
                                    tags=cd['tr_tags'],
                                    category=cd['category'],
                                    comment=cd['comment'])
-            return redirect(reverse("accounts:details", args=[account.slug]))
+            return redirect(reverse("accounts:list_"))
     else:
         form = ExchangeForm(account=account, cat_type=settings.TR_EXCHANGE)
     return render(request, "accounts/money_transfer.html", {'account': account,
