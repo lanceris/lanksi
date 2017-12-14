@@ -68,6 +68,8 @@ def get_history(queryset):
             item['to'] = t.tr_to
         elif t.tr_type == settings.TR_EXCHANGE:
             item['type'] = 4
+            item['from'] = t.tr_from
+            item['to'] = t.tr_to
 
 
         history_items.append(item)
